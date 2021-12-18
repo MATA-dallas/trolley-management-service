@@ -1,0 +1,57 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: trolley-management-api
+spec:
+  ports:
+    - port: 3000
+      protocol: TCP
+      targetPort: 3000
+  selector:
+    app: trolley-management
+    tier: compute
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: trolley-management-api
+spec:
+  selector:
+    matchLabels:
+      app: trolley-management
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: trolley-management
+        tier: compute
+    spec:
+      containers:
+        - image: mata-dallas/trolley-management-api:v1
+          imagePullPolicy: IfNotPresent
+          name: trolley-management-api
+          env:
+            - name: MYSQL_DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: trolley-management-credentials
+                  key: username
+            - name: MYSQL_DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: trolley-management-credentials
+                  key: password
+            - name: MYSQL_DB_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: trolley-management-credentials
+                  key: host
+            - name: MYSQL_DB_PORT
+              valueFrom:
+                secretKeyRef:
+                  name: trolley-management-credentials
+                  key: port
+          ports:
+            - containerPort: 8080
