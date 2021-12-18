@@ -4,6 +4,9 @@ kind: Service
 metadata:
   name: trolley-management-api
 spec:
+  type: NodePort
+  externalIPs:
+    - "192.168.0.196"
   ports:
     - port: 3000
       protocol: TCP
@@ -32,6 +35,13 @@ spec:
         - image: mata-dallas/trolley-management-api:latest
           imagePullPolicy: Never
           name: trolley-management-api
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "250m"
+            limits:
+              memory: "500Mi"
+              cpu: "500m"
           env:
             - name: MYSQL_DB_USER
               valueFrom:
