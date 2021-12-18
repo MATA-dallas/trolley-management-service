@@ -29,8 +29,8 @@ spec:
         tier: compute
     spec:
       containers:
-        - image: mata-dallas/trolley-management-api:v1
-          imagePullPolicy: IfNotPresent
+        - image: mata-dallas/trolley-management-api:latest
+          imagePullPolicy: Never
           name: trolley-management-api
           env:
             - name: MYSQL_DB_USER

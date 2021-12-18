@@ -9,7 +9,7 @@ if(process.env.DEVELOPMENT) {
 }
 else {
   console.log("reading environment variables from .env");
-  dotenv.config()
+  dotenv.config();
 }
 
 export namespace Database {
@@ -31,7 +31,7 @@ export namespace Knex {
       database: process.env.DATABASE_NAME,
       user: process.env.DATABASE_USERNAME,
       password: process.env.DATABASE_PASSWORD,
-      port: parseInt(process.env.DATABASE_PORT || "3000"),
+      port: parseInt(process.env.DATABASE_PORT || "3306"),
     },
     pool: {
       min: parseInt(process.env.DATABASE_POOL_MIN || "0"),

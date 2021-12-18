@@ -5,13 +5,13 @@ metadata:
 spec:
   selector:
     matchLabels:
-      app: mysql
+      app: trolley-management
   strategy:
     type: Recreate
   template:
     metadata:
       labels:
-        app: mysql
+        app: trolley-management
     spec:
       containers:
       - image: mariadb
@@ -44,4 +44,4 @@ spec:
   ports:
   - port: 3306
   selector:
-    app: mysql
+    app: trolley-management
