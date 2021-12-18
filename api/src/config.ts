@@ -10,6 +10,7 @@ if(process.env.DEVELOPMENT) {
 else {
   console.log("reading environment variables from .env");
   dotenv.config();
+  console.log(process.env);
 }
 
 export namespace Database {
@@ -39,7 +40,7 @@ export namespace Knex {
     },
     migrations: {
       tableName: 'KnexMigrations',
-      directory: '../Migrations'
+      directory: './dist/migrations'
     },
   }
 }

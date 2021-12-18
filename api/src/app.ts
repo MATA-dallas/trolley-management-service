@@ -1,6 +1,5 @@
 import express from "express";
 import logger from "morgan";
-import * as path from "path";
 import * as bodyParser from "body-parser"
 import "express-async-errors";
 import carApplication from "./application/car";
@@ -11,10 +10,8 @@ import { errorHandler, errorNotFoundHandler } from "./middlewares/errorHandler";
 
 import dataProviders from "./data-providers";
 import { Server } from "./config";
-import { NextFunction } from "connect";
 // Create Express server
 export const app = express();
-
 
 
 if(Server.isDev)
@@ -78,7 +75,7 @@ async function startServer(){
   }
 
   await RegisterControllers();
-  app.get('/', (req, res)=>{throw new Error("test")});
+  app.get('/', (req, res)=>{res.end("hello world")});
 
   // note: the not found handler should be registered at the very end
   app.use(errorHandler);
@@ -88,5 +85,5 @@ async function startServer(){
 }
 
 startServer()
-  .then(x=>console.log("server started"))
-  .catch((x:Error)=>console.log(x.message));
+    .then(x=>console.log("server started"))
+    .catch((x:Error)=>console.log(x.message));

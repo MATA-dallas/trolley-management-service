@@ -1,0 +1,30 @@
+version: "3.9"  # optional since v1.27.0
+services:
+  mysql:
+    image: mariadb
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+    volumes:
+      - "./init.sql:/docker-entrypoint-initdb.d/init.sql"
+      - "mysql-volume:/mysql"
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
+  web:
+    build: .
+    restart: always
+    ports:
+      - "3000:3000"
+    # volumes:
+    #   - "app:/app"
+    # depends_on:
+    #   mysql:
+    #     condition: service_healthy
+volumes:
+  mysql-volume:
+  # app:
