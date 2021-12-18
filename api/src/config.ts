@@ -10,7 +10,6 @@ if(process.env.DEVELOPMENT) {
 else {
   console.log("reading environment variables from .env");
   dotenv.config();
-  console.log(process.env);
 }
 
 export namespace Database {

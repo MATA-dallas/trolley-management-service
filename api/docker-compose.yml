@@ -20,11 +20,11 @@ services:
     restart: always
     ports:
       - "3000:3000"
-    # volumes:
-    #   - "app:/app"
-    # depends_on:
-    #   mysql:
-    #     condition: service_healthy
+    volumes:
+      - "app:/app"
+    depends_on:
+      mysql:
+        condition: service_healthy
 volumes:
   mysql-volume:
-  # app:
+  app:
