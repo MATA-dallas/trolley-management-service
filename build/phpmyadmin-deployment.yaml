@@ -1,0 +1,74 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: trolley-management
+  name: phpmyadmin
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: trolley-management
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: trolley-management
+    spec:
+      containers:
+        - env:
+            - name: UPLOAD_LIMIT
+              value: 300M
+          image: phpmyadmin/phpmyadmin:latest
+          name: phpmyadmin
+          ports:
+            - containerPort: 80
+          resources: {}
+          volumeMounts:
+            - mountPath: /etc/phpmyadmin/config.user.inc.php
+              name: phpmyadmin-volume
+      restartPolicy: Always
+      volumes:
+        - name: phpmyadmin-volume
+          persistentVolumeClaim:
+            claimName: phpmyadmin-volume
+status: {}
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: phpmyadmin
+  name: phpmyadmin
+spec:
+  type: NodePort
+  ports:
+    - name: "82"
+      port: 82
+      targetPort: 80
+  selector:
+    app: phpmyadmin
+  externalIPs:
+    - "192.168.0.195"
+status:
+  loadBalancer: {}
+
+
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  labels:
+    app: phpmyadmin-volume
+  name: phpmyadmin-volume
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100Mi
+status: {}

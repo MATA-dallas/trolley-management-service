@@ -2,10 +2,15 @@ FROM node:16
 WORKDIR /app
 
 COPY package.json .
+COPY package-lock.json .
+COPY tsconfig.json .
+COPY .env .
+COPY knexfile.js .
+COPY run-app.sh .
 RUN npm install
-COPY . .
+COPY ./src ./src
 RUN npm run build
 
 EXPOSE 3000
 
-CMD [ "npm", "run", "start" ]
+CMD [ "sh","run-app.sh" ]
