@@ -4,12 +4,14 @@ import * as bodyParser from "body-parser"
 import "express-async-errors";
 import carApplication from "./application/car";
 import alertApplication from './application/alert';
+import positionApplication from './application/position';
 import utils from "./util"
 
 import { errorHandler, errorNotFoundHandler } from "./middlewares/errorHandler";
 
 import dataProviders from "./data-providers";
 import { Server } from "./config";
+import { allowedNodeEnvironmentFlags } from "process";
 // Create Express server
 export const app = express();
 
@@ -43,9 +45,18 @@ async function RegisterControllers() {
     app.use('/alerts', router);
   }
 
+  const addPositionRoutes = async() => {
+    const data = await positionApplication.data.create(dataProvider);
+    const handler = await positionApplication.handler.create(data);
+    const router = await positionApplication.controller.create(handler, util);
+
+    app.use('/positions', router);
+  }
+
   await Promise.all([
     addCarRoutes(), 
-    addAlertRoutes()
+    addAlertRoutes(),
+    addPositionRoutes()
   ]);
 }
 
