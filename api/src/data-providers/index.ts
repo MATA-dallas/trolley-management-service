@@ -1,6 +1,6 @@
 import mySqlProvider from "./my-sql.provider";
 import {Database} from '../config'
-import { Knex } from "knex";
+import knex, { Knex } from "knex";
 import rastracProvider, { RastracEventEmitter, RastracProvider } from "./rastrac.provider";
 
 export type MysqlClient = {
@@ -11,8 +11,7 @@ export type MysqlClient = {
 // append other exported clients to this type
 export type DataClient = MysqlClient;
 
-async function create(emitter: RastracEventEmitter) : Promise<DataClient> {
-    const mysqlInstance = await mySqlProvider.create();
+async function create(emitter: RastracEventEmitter, mysqlInstance: Knex<any, unknown[]>) : Promise<DataClient> {
     return {
         mysql: (tableName: string) => mysqlInstance.withSchema(Database.schema).table(tableName),
         rastrac: rastracProvider.create(emitter)

@@ -8,4 +8,11 @@ export type Position = {
     manualStatus: 'OFF' | ''
 }
 
+export type CarPosition = Position & {
+    car: number,
+    IMEI: number
+}
+
 export const allKeysOfPosition:string[] = ['car','latitude','longitude','namedPoint','updateTime','manualStatus']
+
+export const allKeysOfCarPosition: string[] = ['IMEI', 'positions.car', 'latitude','longitude','namedPoint','updateTime','manualStatus'];

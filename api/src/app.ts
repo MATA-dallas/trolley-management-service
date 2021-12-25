@@ -14,6 +14,7 @@ import { Server } from "./config";
 import { allowedNodeEnvironmentFlags } from "process";
 import { EventEmitter } from "stream";
 import { RastracEventEmitter } from "./data-providers/rastrac.provider";
+import mySqlProvider from "./data-providers/my-sql.provider";
 // Create Express server
 export const app = express();
 
@@ -31,7 +32,8 @@ app.use(
 async function RegisterControllers() {
   const util = utils.Util.create();
   const rastracEventEmitter = new EventEmitter() as RastracEventEmitter;
-  const dataProvider = await dataProviders.create(rastracEventEmitter);
+  const mysqlInstance = await mySqlProvider.create();
+  const dataProvider = await dataProviders.create(rastracEventEmitter, mysqlInstance);
 
 
   const addCarRoutes = async () => {
@@ -51,7 +53,7 @@ async function RegisterControllers() {
 
   const addPositionRoutes = async() => {
     const data = await positionApplication.data.create(dataProvider);
-    const handler = await positionApplication.handler.create(data);
+    const handler = await positionApplication.handler.create(data, rastracEventEmitter);
     const router = await positionApplication.controller.create(handler, util);
 
     app.use('/positions', router);
