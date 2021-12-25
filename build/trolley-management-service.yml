@@ -1,0 +1,244 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: trolley-management-api
+spec:
+  type: NodePort
+  externalIPs:
+    - "192.168.0.196"
+  ports:
+    - port: 3000
+      protocol: TCP
+      targetPort: 3000
+  selector:
+    app: trolley-management
+    tier: compute
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: trolley-management-api
+spec:
+  selector:
+    matchLabels:
+      app: trolley-management
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: trolley-management
+        tier: compute
+    spec:
+      containers:
+        - image: mata-dallas/trolley-management-api:latest
+          imagePullPolicy: Never
+          name: trolley-management-api
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "250m"
+            limits:
+              memory: "500Mi"
+              cpu: "500m"
+          env:
+            - name: MYSQL_DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: trolley-management-credentials
+                  key: username
+            - name: MYSQL_DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: trolley-management-credentials
+                  key: password
+            - name: MYSQL_DB_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: trolley-management-credentials
+                  key: host
+            - name: MYSQL_DB_PORT
+              valueFrom:
+                secretKeyRef:
+                  name: trolley-management-credentials
+                  key: port
+          ports:
+            - containerPort: 8080
+
+---
+# database
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql
+spec:
+  selector:
+    matchLabels:
+      app: trolley-management
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: trolley-management
+    spec:
+      containers:
+      - image: mariadb
+        name: mysql
+        resources:
+          requests:
+              memory: "64Mi"
+              cpu: "250m"
+          limits:
+            memory: "500Mi"
+            cpu: "500m"
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: trolley-management-credentials
+              key: password
+        ports:
+        - containerPort: 3306
+          name: mysql
+        volumeMounts:
+        - name: mysql-persistent-storage
+          mountPath: /var/lib/mysql
+      volumes:
+      - name: mysql-persistent-storage
+        persistentVolumeClaim:
+          claimName: mysql-pv-claim
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql
+spec:
+  type: NodePort
+  externalIPs:
+    - "192.168.0.194"
+  ports:
+  - port: 3306
+  selector:
+    app: trolley-management
+
+---
+
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: mysql-pv-volume
+  labels:
+    type: local
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 10Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/data/mysql"
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mysql-pv-claim
+spec:
+  storageClassName: manual
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+
+---
+# phpmyadmin
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: trolley-management
+  name: phpmyadmin
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: trolley-management
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: trolley-management
+    spec:
+      containers:
+        - env:
+            - name: UPLOAD_LIMIT
+              value: 300M
+          image: phpmyadmin/phpmyadmin:latest
+          name: phpmyadmin
+          ports:
+            - containerPort: 80
+          resources: {}
+          volumeMounts:
+            - mountPath: /etc/phpmyadmin/config.user.inc.php
+              name: phpmyadmin-volume
+      restartPolicy: Always
+      volumes:
+        - name: phpmyadmin-volume
+          persistentVolumeClaim:
+            claimName: phpmyadmin-volume
+status: {}
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: phpmyadmin
+  name: phpmyadmin
+spec:
+  type: NodePort
+  ports:
+    - name: "82"
+      port: 82
+      targetPort: 80
+  selector:
+    app: phpmyadmin
+  externalIPs:
+    - "192.168.0.195"
+status:
+  loadBalancer: {}
+
+
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  labels:
+    app: phpmyadmin-volume
+  name: phpmyadmin-volume
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100Mi
+status: {}
+
+---
+# env variables
+
+apiVersion: v1
+kind: Secret
+metadata:
+  name: trolley-management-credentials
+type: kubernetes.io/basic-auth
+stringData:
+  username: landon
+  password: password
+  port: "3306"
+  host: "192.168.0.194"
