@@ -17,10 +17,15 @@ export namespace Database {
 }
 
 export namespace Server {
-  export const port = Number(process.env.PORT || '3000')
-  export const bodyLimit = '100kb'
-  export const corsHeaders = ['Link']
-  export const isDev = process.env.NODE_ENV === 'development'
+  export const port = Number(process.env.PORT || '3000');
+  export const bodyLimit = '100kb';
+  export const corsHeaders = ['Link'];
+  export const isDev = process.env.NODE_ENV === 'development';
+}
+
+export namespace Rastrac {
+  export const baseUrl = process.env.RASTRAC_BASE_URL;
+  export const basicAuthToken = process.env.RASTRAC_AUTH_TOKEN;
 }
 
 export namespace Knex {
@@ -45,4 +50,4 @@ export namespace Knex {
 }
 
 
-export default {Database, Server, Knex}
+export default {Database, Server, Knex, Rastrac}

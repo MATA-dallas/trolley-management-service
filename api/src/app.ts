@@ -12,6 +12,8 @@ import { errorHandler, errorNotFoundHandler } from "./middlewares/errorHandler";
 import dataProviders from "./data-providers";
 import { Server } from "./config";
 import { allowedNodeEnvironmentFlags } from "process";
+import { EventEmitter } from "stream";
+import { RastracEventEmitter } from "./data-providers/rastrac.provider";
 // Create Express server
 export const app = express();
 
@@ -27,8 +29,10 @@ app.use(
 );
 
 async function RegisterControllers() {
-  const dataProvider = await dataProviders.create();
   const util = utils.Util.create();
+  const rastracEventEmitter = new EventEmitter() as RastracEventEmitter;
+  const dataProvider = await dataProviders.create(rastracEventEmitter);
+
 
   const addCarRoutes = async () => {
     const data = await carApplication.data.create(dataProvider);
