@@ -32,7 +32,10 @@ const addAlert = (alerts: () => Knex.QueryBuilder<any, any>) => async (alertText
         .insert({
             'Type': type,
             'Alert': alertText,
-            'Posted': timePosted
+            'UpdateID': 0,
+            'Posted': timePosted,
+            'postedBy': '',
+            'Active': true
         })
         .returning('ID')
     ) as number[];
