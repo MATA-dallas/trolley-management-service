@@ -10,7 +10,9 @@ const addAlert = (alerts: Data, util: Util) => async (alertText: string | null):
     if(alertText == null)
         throw new Error('Alert text is required');
     
-    return await alerts.addAlert(alertText, 'INFO', util.getCurrentDateTime());
+    // legacy code uses this markup. this will need to get refactored out after the first prod push
+    const html = `<div style='width:100%;padding:5px;background-color:#488115;color:WHITE;'>${alertText}</div>`;
+    return await alerts.addAlert(html, 'INFO', util.getCurrentDateTime());
 }
 
 const getAlertById = (alerts: Data) => async (id: number) => {

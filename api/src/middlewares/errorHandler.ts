@@ -4,6 +4,7 @@ import config from "../config";
 
 declare type WebError = Error & { status?: number };
 export const errorHandler = (err: WebError, req: Request, res: Response, next: NextFunction): void => {
+    console.log(err);
     if(config.Server.isDev){
         res.status(500).json({message: err.message});
     }
