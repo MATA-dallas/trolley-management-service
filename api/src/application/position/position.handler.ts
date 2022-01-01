@@ -6,13 +6,11 @@ type CachedPositions = {
     positions: Position[] | null;
 }
 
-const getAllPositions = (positions: Data, cachedPositions: CachedPositions) => async () => {
-    if(cachedPositions.positions == null)
-        return positions.getAll();
-    return cachedPositions.positions;
+const getAllPositions = (positions: Data) => async () => {
+    return positions.getAll();
 }
 
-const handleRastracStateUpdate = (emitter: RastracEventEmitter, data: Data, cachedPositions: CachedPositions) => {
+const handleRastracStateUpdate = (emitter: RastracEventEmitter, data: Data) => {
     emitter.on('trolleyCarStateUpdated', async (state: TrolleyCarState[]) => {
         try {
             const carPositions = await data.getCarPositions();
@@ -28,7 +26,6 @@ const handleRastracStateUpdate = (emitter: RastracEventEmitter, data: Data, cach
                 });
             });
             await Promise.all(updatePromises);
-            cachedPositions.positions = await data.getAll();
         }
         catch(err) {
             // TODO: learn how to not use a try/catch here
@@ -42,12 +39,9 @@ export interface Handler {
 }
 
 const create = (data: Data, emitter: RastracEventEmitter) : Handler => {
-    const cachedPositions: CachedPositions = {
-        positions: null
-    };
-    handleRastracStateUpdate(emitter, data, cachedPositions)
+    handleRastracStateUpdate(emitter, data)
     return {
-        getAllPositions: getAllPositions(data, cachedPositions)
+        getAllPositions: getAllPositions(data)
     };
 }
 
