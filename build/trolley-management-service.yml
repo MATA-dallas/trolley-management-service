@@ -32,7 +32,7 @@ spec:
         tier: compute
     spec:
       containers:
-        - image: landonrepp/trolley-management-api:latest
+        - image: DOCKERHUB_USERNAME/DOCKERHUB_REPOSITORY:IMAGE_LABEL
           imagePullPolicy: Always
           name: trolley-management-api
           resources:
