@@ -5,10 +5,8 @@ metadata:
   name: trolley-management-api
 spec:
   type: NodePort
-  externalIPs:
-    - "192.168.0.196"
   ports:
-    - port: 3000
+    - port: 80
       protocol: TCP
       targetPort: 3000
   selector:
@@ -134,8 +132,6 @@ metadata:
   name: mysql
 spec:
   type: NodePort
-  externalIPs:
-    - "192.168.0.194"
   ports:
   - port: 3306
   selector:
@@ -222,11 +218,9 @@ spec:
   ports:
     - name: "82"
       port: 82
-      targetPort: 80
+      targetPort: 82
   selector:
     app: phpmyadmin
-  externalIPs:
-    - "192.168.0.195"
 status:
   loadBalancer: {}
 
