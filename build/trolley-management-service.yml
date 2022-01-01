@@ -42,27 +42,30 @@ spec:
             limits:
               memory: "500Mi"
               cpu: "500m"
+          envFrom:
+            - configMapRef:
+                name: trolley-management-api-config
           env:
             - name: MYSQL_DB_USER
               valueFrom:
-                secretKeyRef:
-                  name: trolley-management-credentials
-                  key: username
+                configMapKeyRef:
+                  name: trolley-management-api-config
+                  key: DATABASE_USERNAME
             - name: MYSQL_DB_PASSWORD
               valueFrom:
-                secretKeyRef:
-                  name: trolley-management-credentials
-                  key: password
+                configMapKeyRef:
+                  name: trolley-management-api-config
+                  key: DATABASE_PASSWORD
             - name: MYSQL_DB_HOST
               valueFrom:
-                secretKeyRef:
-                  name: trolley-management-credentials
-                  key: host
+                configMapKeyRef:
+                  name: trolley-management-api-config
+                  key: DATABASE_HOSTNAME
             - name: MYSQL_DB_PORT
               valueFrom:
-                secretKeyRef:
-                  name: trolley-management-credentials
-                  key: port
+                configMapKeyRef:
+                  name: trolley-management-api-config
+                  key: DATABASE_PORT
           ports:
             - containerPort: 8080
 
@@ -96,19 +99,34 @@ spec:
         env:
         - name: MYSQL_ROOT_PASSWORD
           valueFrom:
-            secretKeyRef:
-              name: trolley-management-credentials
-              key: password
+            configMapKeyRef:
+              name: trolley-management-api-config
+              key: DATABASE_PASSWORD
         ports:
         - containerPort: 3306
           name: mysql
         volumeMounts:
         - name: mysql-persistent-storage
           mountPath: /var/lib/mysql
+        - name: mysql-initdb
+          mountPath: /docker-entrypoint-initdb.d
       volumes:
       - name: mysql-persistent-storage
         persistentVolumeClaim:
           claimName: mysql-pv-claim
+      - name: mysql-initdb
+        configMap:
+          name: mysql-initdb-config
+---
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mysql-initdb-config
+data:
+  initdb.sql: |
+    CREATE DATABASE IF NOT EXISTS alerts;
+
 ---
 apiVersion: v1
 kind: Service
@@ -228,17 +246,3 @@ spec:
     requests:
       storage: 100Mi
 status: {}
-
----
-# env variables
-
-apiVersion: v1
-kind: Secret
-metadata:
-  name: trolley-management-credentials
-type: kubernetes.io/basic-auth
-stringData:
-  username: landon
-  password: password
-  port: "3306"
-  host: "192.168.0.194"
