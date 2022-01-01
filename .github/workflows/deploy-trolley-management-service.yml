@@ -35,4 +35,5 @@ jobs:
           EOF
           kubectl create configmap trolley-management-api-config --from-env-file=./api/.env -o yaml
           kubectl apply -f ./build/trolley-management-service.yml
+          kubectl rollout restart deploy
           
