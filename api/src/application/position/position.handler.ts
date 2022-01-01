@@ -1,11 +1,18 @@
 import { RastracEventEmitter, RastracProvider, TrolleyCarState } from "../../data-providers/rastrac.provider";
 import { Data } from "./position.data"
+import { Position } from "./position.model";
 
-const getAllPositions = (positions: Data) => async () => {
-    return positions.getAll();
+type CachedPositions = {
+    positions: Position[] | null;
 }
 
-const handleRastracStateUpdate = (emitter: RastracEventEmitter, data: Data) => {
+const getAllPositions = (positions: Data, cachedPositions: CachedPositions) => async () => {
+    if(cachedPositions.positions == null)
+        return positions.getAll();
+    return cachedPositions.positions;
+}
+
+const handleRastracStateUpdate = (emitter: RastracEventEmitter, data: Data, cachedPositions: CachedPositions) => {
     emitter.on('trolleyCarStateUpdated', async (state: TrolleyCarState[]) => {
         try {
             const carPositions = await data.getCarPositions();
@@ -21,6 +28,7 @@ const handleRastracStateUpdate = (emitter: RastracEventEmitter, data: Data) => {
                 });
             });
             await Promise.all(updatePromises);
+            cachedPositions.positions = await data.getAll();
         }
         catch(err) {
             // TODO: learn how to not use a try/catch here
@@ -34,9 +42,12 @@ export interface Handler {
 }
 
 const create = (data: Data, emitter: RastracEventEmitter) : Handler => {
-    handleRastracStateUpdate(emitter, data)
+    const cachedPositions: CachedPositions = {
+        positions: null
+    };
+    handleRastracStateUpdate(emitter, data, cachedPositions)
     return {
-        getAllPositions: getAllPositions(data)
+        getAllPositions: getAllPositions(data, cachedPositions)
     };
 }
 
