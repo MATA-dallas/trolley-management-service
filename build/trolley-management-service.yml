@@ -32,8 +32,8 @@ spec:
         tier: compute
     spec:
       containers:
-        - image: mata-dallas/trolley-management-api:latest
-          imagePullPolicy: Never
+        - image: landonrepp/trolley-management-api:latest
+          imagePullPolicy: Always
           name: trolley-management-api
           resources:
             requests:
