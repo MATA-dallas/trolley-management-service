@@ -4,7 +4,6 @@ WORKDIR /app
 COPY package.json .
 COPY package-lock.json .
 COPY tsconfig.json .
-COPY .env .
 COPY knexfile.js .
 COPY run-app.sh .
 RUN npm install
