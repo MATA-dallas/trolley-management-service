@@ -9,6 +9,7 @@ spec:
     - port: 80
       protocol: TCP
       targetPort: 3000
+      nodePort: 8080
   selector:
     app: trolley-management
     tier: compute
