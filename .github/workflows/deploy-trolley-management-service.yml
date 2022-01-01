@@ -30,9 +30,9 @@ jobs:
           docker push landonrepp/trolley-management-api:${{ github.sha }}
           export DOCKER_CONFIG=$(cat ~/.docker/config.json | base64 -w 0)
           sed -i'' -e 's/DOCKERHUB_USERNAME/${{ secrets.DOCKERHUB_USERNAME }}/g' -e 's/DOCKERHUB_REPOSITORY/trolley-management-api/g' -e 's/IMAGE_LABEL/${{ github.sha }}/g' -e "s/DOCKER_CONFIG/$DOCKER_CONFIG/g" ./build/trolley-management-service.yml
-          cat <<EOF 
+          cat <<EOF > ./api/.env
           ${{ secrets.ENV_FILE }}
-          EOF > ./api/.env
+          EOF
           kubectl create configmap trolley-management-api-config --from-env-file=./api/.env -o yaml
           kubectl apply -f ./build/trolley-management-service.yml
           
