@@ -1,3 +1,4 @@
+import util, { Util } from "../../util/util";
 import { RastracEventEmitter, RastracProvider, TrolleyCarState } from "../../data-providers/rastrac.provider";
 import { Data } from "./position.data"
 import { Position } from "./position.model";
@@ -22,7 +23,8 @@ const handleRastracStateUpdate = (emitter: RastracEventEmitter, data: Data) => {
                 }
                 return data.updatePosition(position.car, {
                     Latitude: stateItem.Latitude,
-                    Longitude: stateItem.Longitude
+                    Longitude: stateItem.Longitude,
+                    UpdateTime: stateItem.TimeAtPosition
                 });
             });
             await Promise.all(updatePromises);

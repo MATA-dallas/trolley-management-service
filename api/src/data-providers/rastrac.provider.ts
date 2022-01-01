@@ -8,6 +8,7 @@ export type TrolleyCarState = {
     ID: string,
     Latitude: number,
     Longitude: number,
+    TimeAtPosition: Date,
     Advisories: "BARN" | "CITYPLACE" | ""
 }
 
