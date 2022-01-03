@@ -10,14 +10,18 @@ export interface Data {
 
 export type UpdatePositionParams = {
     Latitude: number,
-    Longitude: number
+    Longitude: number,
+    UpdateTime: Date
 }
 
 export const updatePosition = (positions: () => Knex.QueryBuilder<any, Position>) => async (car: number, values: UpdatePositionParams) => {
     return positions().where({
         car: car
     })
-    .update(values)
+    .update({
+        ...values,
+        UpdateTime: new Date(values.UpdateTime)
+    })
     .then(rows=> {
         return rows > 0;
     })
