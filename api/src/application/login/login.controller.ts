@@ -1,11 +1,21 @@
 import express from "express";
-import { Authenticator as Passport } from "passport";
-import { IVerifyOptions, Strategy as LocalStrategy } from "passport-local";
-import { Handler } from "./login.handler";
+import passport, {
+    Authenticator as Passport
+} from "passport";
+import {
+    IVerifyOptions,
+    Strategy as LocalStrategy
+} from "passport-local";
+import {
+    Handler
+} from "./login.handler";
+import jwt from 'jsonwebtoken';
+import { User } from "./login.model";
+import { Server } from "../../config"
 
-type DoneCallback = (error: any, user?: any, options?: IVerifyOptions) => void;
+type DoneCallback = (error: any, user ? : any, options ? : IVerifyOptions) => void;
 
-const create = (passport: Passport, handler: Handler) => {
+const create = (handler: Handler) => {
     const router = express.Router();
 
     passport.use(new LocalStrategy(
@@ -14,21 +24,34 @@ const create = (passport: Passport, handler: Handler) => {
             // look for the user data
             return handler.getAuthenticatedUser(username, passwordHash)
                 .then(user => {
-                    if(user == null) {
-                        done(null, false, {message: "username of password incorrect."})
+                    if (user == null) {
+                        done(null, false, {
+                            message: "username of password incorrect."
+                        });
                         return;
                     }
-                    done(null, user)
+                    done(null, user);
                 })
                 .catch(err => done(err));
         }
     ));
 
     router.post('/',
-        passport.authenticate('local'),
+        passport.authenticate('local', {
+            session: false
+        }),
         function (req, res) {
-            res.redirect('/');
+            const user = req.user as User;
+            const token = jwt.sign({id: {
+                id: user.ID,
+                user: user.user
+            }}, Server.jwtSecret);
+            res.end(token);
         }
     );
 
+    return router;
+}
+export default {
+    create
 }

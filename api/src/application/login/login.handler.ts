@@ -1,6 +1,22 @@
-import { User } from "./login.data";
+import { Data } from "./login.data";
 
-export interface Handler {
-    getAuthenticatedUser: (username: string, passwordHash: string) => Promise<User | null>
+
+
+const getAuthenticatedUser = (data: Data) => async (username: string, passwordHash: string) => {
+    const user = await data.getUserByName(username);
+    if(user.password != passwordHash)
+        return null
+    return user;
 }
 
+export interface Handler {
+    getAuthenticatedUser: ReturnType<typeof getAuthenticatedUser>
+}
+
+const create = (data: Data): Handler => {
+    return {
+        getAuthenticatedUser: getAuthenticatedUser(data)
+    }
+}
+
+export default { create };

@@ -5,12 +5,13 @@ import "express-async-errors";
 import carApplication from "./application/car";
 import alertApplication from './application/alert';
 import positionApplication from './application/position';
+import loginApplication from './application/login';
 import utils from "./util"
 
 import { errorHandler, errorNotFoundHandler } from "./middlewares/errorHandler";
 
 import dataProviders from "./data-providers";
-import { Server } from "./config";
+import { Server, Database } from "./config";
 import { allowedNodeEnvironmentFlags } from "process";
 import { EventEmitter } from "stream";
 import { RastracEventEmitter } from "./data-providers/rastrac.provider";
@@ -59,10 +60,19 @@ async function RegisterControllers() {
     app.use('/positions', router);
   }
 
+  const addLoginRoutes = async () => {
+    const data = await loginApplication.data.create(dataProvider);
+    const handler = await loginApplication.handler.create(data)
+    const router = await loginApplication.controller.create(handler);
+
+    app.use('/login', router)
+  }
+
   await Promise.all([
     addCarRoutes(), 
     addAlertRoutes(),
-    addPositionRoutes()
+    addPositionRoutes(),
+    addLoginRoutes()
   ]);
 }
 
