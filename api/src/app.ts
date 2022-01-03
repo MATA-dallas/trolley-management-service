@@ -1,4 +1,4 @@
-import express from "express";
+import express, { Router } from "express";
 import logger from "morgan";
 import * as bodyParser from "body-parser"
 import "express-async-errors";
@@ -7,6 +7,7 @@ import alertApplication from './application/alert';
 import positionApplication from './application/position';
 import loginApplication from './application/login';
 import utils from "./util"
+import jwtAuthenticator from "./middleware/jwt.authenticator";
 
 import { errorHandler, errorNotFoundHandler } from "./middlewares/errorHandler";
 
@@ -16,6 +17,7 @@ import { allowedNodeEnvironmentFlags } from "process";
 import { EventEmitter } from "stream";
 import { RastracEventEmitter } from "./data-providers/rastrac.provider";
 import mySqlProvider from "./data-providers/my-sql.provider";
+import passport from "passport";
 // Create Express server
 export const app = express();
 
@@ -30,7 +32,11 @@ app.use(
   })
 );
 
+jwtAuthenticator.initialize();
+
 async function RegisterControllers() {
+  const authMiddleware = passport.authenticate('jwt', { session: false });
+
   const util = utils.Util.create();
   const rastracEventEmitter = new EventEmitter() as RastracEventEmitter;
   const mysqlInstance = await mySqlProvider.create();
@@ -47,7 +53,7 @@ async function RegisterControllers() {
   const addAlertRoutes = async () => {
     const data = await alertApplication.data.create(dataProvider);
     const handler = await alertApplication.handler.create(data, util);
-    const router = await alertApplication.controller.create(handler, util);
+    const router = await alertApplication.controller.create(handler, util, authMiddleware);
 
     app.use('/alerts', router);
   }
