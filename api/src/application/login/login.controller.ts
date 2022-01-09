@@ -43,10 +43,10 @@ const create = (handler: Handler) => {
         }),
         function (req, res) {
             const user = req.user as User;
-            const token = jwt.sign({id: {
+            const token = jwt.sign({
                 id: user.ID,
                 user: user.user
-            } as JwtPayload}, Server.jwtSecret);
+            } as JwtPayload, Server.jwtSecret);
             res.end(token);
         }
     );

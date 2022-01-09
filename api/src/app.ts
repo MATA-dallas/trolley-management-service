@@ -18,6 +18,7 @@ import { EventEmitter } from "stream";
 import { RastracEventEmitter } from "./data-providers/rastrac.provider";
 import mySqlProvider from "./data-providers/my-sql.provider";
 import passport from "passport";
+import cors from "cors";
 // Create Express server
 export const app = express();
 
@@ -42,6 +43,7 @@ async function RegisterControllers() {
   const mysqlInstance = await mySqlProvider.create();
   const dataProvider = await dataProviders.create(rastracEventEmitter, mysqlInstance);
 
+  app.use(cors())
 
   const addCarRoutes = async () => {
     const data = await carApplication.data.create(dataProvider);
