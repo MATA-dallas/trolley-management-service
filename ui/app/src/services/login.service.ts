@@ -2,6 +2,7 @@ import md5 from "md5";
 import md5Hex from "md5-hex";
 import { User } from "../store/store.models"
 import { Config } from "../util/config";
+import axios from "axios";
 
 export type LoginService = {
     tryLogIn: ReturnType<typeof tryLogIn>,
@@ -18,20 +19,14 @@ let authToken: string | null = null;
 const getAuthToken = () => () => authToken;
 
 const tryLogIn = (config: Config) => (username: string, password: string) => {
-    return fetch(`${config.apiBaseUrl}/login`, {
-        body: JSON.stringify({
-            "username":username,
-            "password": md5Hex(username + md5Hex(password))
-        }),
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        method:'POST'
+    return axios.post<string>(`${config.apiBaseUrl}/login`, {
+        username,
+        password: md5Hex(username + md5Hex(password))
     })
         .then(async (res) => {
             const data = {
                 successful: res.status == 200,
-                response: await res.json()
+                response: await res.data
             } as LoginResponse;
             console.log(data);
             return data;

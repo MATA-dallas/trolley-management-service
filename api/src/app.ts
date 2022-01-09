@@ -32,6 +32,7 @@ app.use(
     extended: true,
   })
 );
+app.use(cors());
 
 jwtAuthenticator.initialize();
 
@@ -43,7 +44,6 @@ async function RegisterControllers() {
   const mysqlInstance = await mySqlProvider.create();
   const dataProvider = await dataProviders.create(rastracEventEmitter, mysqlInstance);
 
-  app.use(cors())
 
   const addCarRoutes = async () => {
     const data = await carApplication.data.create(dataProvider);
