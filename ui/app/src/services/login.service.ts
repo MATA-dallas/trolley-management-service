@@ -1,12 +1,13 @@
-import md5 from "md5";
 import md5Hex from "md5-hex";
-import { User } from "../store/store.models"
 import { Config } from "../util/config";
 import axios from "axios";
+import { BehaviorSubject, RetryConfig } from "rxjs";
+import {reactLocalStorage} from 'reactjs-localstorage';
 
 export type LoginService = {
     tryLogIn: ReturnType<typeof tryLogIn>,
-    getAuthToken: ReturnType<typeof getAuthToken>
+    getAuthToken: ReturnType<typeof getAuthToken>,
+    getAuthSubject: ReturnType<typeof getAuthSubject>
 }
 
 export type LoginResponse = {
@@ -14,10 +15,13 @@ export type LoginResponse = {
     statusCode: number | null,
     response: string
 }
+const loginTokenSymbol = 'login-token';
 
-let authToken: string | null = null;
+const currentUserSubject = new BehaviorSubject<string>(reactLocalStorage.get(loginTokenSymbol));
 
-const getAuthToken = () => () => authToken;
+const getAuthSubject = () => () => currentUserSubject;
+
+const getAuthToken = () => () => currentUserSubject.getValue();
 
 const tryLogIn = (config: Config) => (username: string, password: string) => {
     return axios.post<string>(`${config.apiBaseUrl}/login`, {
@@ -30,7 +34,10 @@ const tryLogIn = (config: Config) => (username: string, password: string) => {
                 response: await res.data,
                 statusCode: res.status
             } as LoginResponse;
-            console.log(data);
+
+            if(data.successful)
+                currentUserSubject.next(data.response);
+
             return data;
         })
         .catch((err: Error) => {
@@ -39,16 +46,20 @@ const tryLogIn = (config: Config) => (username: string, password: string) => {
                 response: err.toString(),
                 statusCode: null
             } as LoginResponse;
-            console.log(data);
+            
             return data;
         });
 }
 
 const create = (config: Config) => {
-    return {
+    const loginService: LoginService = {
         tryLogIn: tryLogIn(config),
-        getAuthToken: getAuthToken()
-    } as LoginService;
+        getAuthToken: getAuthToken(),
+        getAuthSubject: getAuthSubject()
+    };
+
+    return loginService;
 }
 
 export default { create }
+
