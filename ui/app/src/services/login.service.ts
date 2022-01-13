@@ -11,6 +11,7 @@ export type LoginService = {
 
 export type LoginResponse = {
     successful: boolean,
+    statusCode: number | null,
     response: string
 }
 
@@ -26,7 +27,8 @@ const tryLogIn = (config: Config) => (username: string, password: string) => {
         .then(async (res) => {
             const data = {
                 successful: res.status == 200,
-                response: await res.data
+                response: await res.data,
+                statusCode: res.status
             } as LoginResponse;
             console.log(data);
             return data;
@@ -34,7 +36,8 @@ const tryLogIn = (config: Config) => (username: string, password: string) => {
         .catch((err: Error) => {
             const data = {
                 successful: false,
-                response: err.toString()
+                response: err.toString(),
+                statusCode: null
             } as LoginResponse;
             console.log(data);
             return data;

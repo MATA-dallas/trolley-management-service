@@ -59,7 +59,7 @@ export const LoginForm = () => {
                     {
                         loginResult != null && !loginResult.successful ?
                             <Typography variant="caption" style={{color:'red'}}>
-                                username or password is invalid. {loginResult.response}
+                                username or password is invalid.
                             </Typography>
                             :
                             <></>
