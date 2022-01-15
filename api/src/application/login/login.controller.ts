@@ -12,7 +12,7 @@ import {
 import jwt from 'jsonwebtoken';
 import { User } from "./login.model";
 import { Server } from "../../config"
-import { JwtPayload } from "../../middleware/jwt.authenticator";
+import { ReqUser } from "../../middleware/jwt.authenticator";
 
 type DoneCallback = (error: any, user ? : any, options ? : IVerifyOptions) => void;
 
@@ -46,7 +46,7 @@ const create = (handler: Handler) => {
             const token = jwt.sign({
                 id: user.ID,
                 user: user.user
-            } as JwtPayload, Server.jwtSecret);
+            } as ReqUser, Server.jwtSecret);
             res.end(token);
         }
     );
