@@ -14,7 +14,6 @@ const create = (handler: Handler, util: Util, authMiddleware: any) => {
     
     router.post('/', authMiddleware, async (req: Request, res: Response)=> {
         const val = req.body as PostAlert;
-        console.log(val);
         const id = await handler.addAlert(val.alertText);
 
         res.json(await handler.getAlertById(id));

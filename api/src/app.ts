@@ -6,6 +6,7 @@ import carApplication from "./application/car";
 import alertApplication from './application/alert';
 import positionApplication from './application/position';
 import loginApplication from './application/login';
+import userApplication from './application/user';
 import utils from "./util"
 import jwtAuthenticator from "./middleware/jwt.authenticator";
 
@@ -18,6 +19,7 @@ import { EventEmitter } from "stream";
 import { RastracEventEmitter } from "./data-providers/rastrac.provider";
 import mySqlProvider from "./data-providers/my-sql.provider";
 import passport from "passport";
+import cors from "cors";
 // Create Express server
 export const app = express();
 
@@ -31,6 +33,7 @@ app.use(
     extended: true,
   })
 );
+app.use(cors());
 
 jwtAuthenticator.initialize();
 
@@ -71,14 +74,24 @@ async function RegisterControllers() {
     const handler = await loginApplication.handler.create(data)
     const router = await loginApplication.controller.create(handler);
 
-    app.use('/login', router)
+    app.use('/login', router);
+  }
+
+  const addUserRoutes = async () => {
+    const data = await userApplication.data.create(dataProvider);
+    const handler = await userApplication.handler.create(data);
+    const router = await userApplication.controller.create(handler, authMiddleware);
+
+    app.use('/users', router);
+
   }
 
   await Promise.all([
     addCarRoutes(), 
     addAlertRoutes(),
     addPositionRoutes(),
-    addLoginRoutes()
+    addLoginRoutes(),
+    addUserRoutes()
   ]);
 }
 

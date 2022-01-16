@@ -4,7 +4,7 @@ import passport, {
     Authenticator as Passport
 } from "passport";
 
-export type JwtPayload = {
+export type ReqUser = {
     id: number,
     user: string
 }
@@ -14,7 +14,7 @@ const initialize = ()=> {
         jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
         secretOrKey: Server.jwtSecret
     };
-    passport.use(new JwtStrategy(options, function(jwt_payload : JwtPayload, done) {
+    passport.use(new JwtStrategy(options, function(jwt_payload : ReqUser, done) {
         try {
             return done(null, jwt_payload);
         } catch (error) {

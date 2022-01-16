@@ -4,7 +4,7 @@ import { Data } from "./login.data";
 
 const getAuthenticatedUser = (data: Data) => async (username: string, passwordHash: string) => {
     const user = await data.getUserByName(username);
-    if(user.password != passwordHash)
+    if(user == null || user.password != passwordHash)
         return null
     return user;
 }
