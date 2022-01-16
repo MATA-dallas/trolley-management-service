@@ -1,13 +1,13 @@
 import { Button, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
-import { useAppState } from "../../store/store.context";
+import { useLoginServiceContext, useUserServiceContext } from "../../store";
 
 export const ProfileLoginButton = () => {
-    const ctx = useAppState();
-    const [user, setUser] = useState(ctx.state.user);
+    const userContext = useUserServiceContext();
+    const [user, setUser] = useState(userContext.getUserSubject().getValue());
     useEffect(()=> {
-        setUser(ctx.state.user);
-    }, [ctx.state.user])
+        userContext.getUserSubject().subscribe(setUser);
+    }, [])
     return (
         user == null? 
             <Button color="inherit" href="/login">Login</Button>
@@ -17,18 +17,30 @@ export const ProfileLoginButton = () => {
 }
 
 const ProfileAndLogOut = () => {
-    const ctx = useAppState();
-    const [user, setUser] = useState(ctx.state.user);
+    const loginContext = useLoginServiceContext();
+    const userContext = useUserServiceContext();
+    const [user, setUser] = useState(userContext.getUserSubject().getValue());
     useEffect(()=> {
-        setUser(ctx.state.user);
-    }, [ctx.state.user]);
+        userContext.getUserSubject().subscribe(setUser);
+    }, []);
 
     return (
         <>
-            <Typography variant="h3" >
-                {ctx.state.user}
-            </Typography>
-            <Button color="inherit">Log out</Button>
+            <div style={{padding: 10}}>
+                <div>
+                    <Typography variant="h6" >
+                        {user?.user}
+                    </Typography>
+                </div>
+                <div>
+                    <Button 
+                        color="inherit" 
+                        variant="outlined" 
+                        onClick={()=>loginContext.logOut()}>
+                        Log out
+                    </Button>
+                </div>
+            </div>
         </>
     );
 }

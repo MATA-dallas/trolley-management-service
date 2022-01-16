@@ -7,7 +7,8 @@ import {reactLocalStorage} from 'reactjs-localstorage';
 export type LoginService = {
     tryLogIn: ReturnType<typeof tryLogIn>,
     getAuthToken: ReturnType<typeof getAuthToken>,
-    getAuthSubject: ReturnType<typeof getAuthSubject>
+    getAuthSubject: ReturnType<typeof getAuthSubject>,
+    logOut: ReturnType<typeof logOut>
 }
 
 export type LoginResponse = {
@@ -17,11 +18,16 @@ export type LoginResponse = {
 }
 const loginTokenSymbol = 'login-token';
 
-const currentUserSubject = new BehaviorSubject<string>(reactLocalStorage.get(loginTokenSymbol));
+const currentLoginSubject = new BehaviorSubject<string|null>(reactLocalStorage.get(loginTokenSymbol));
 
-const getAuthSubject = () => () => currentUserSubject;
+const getAuthSubject = () => () => currentLoginSubject;
 
-const getAuthToken = () => () => currentUserSubject.getValue();
+const getAuthToken = () => () => currentLoginSubject.getValue();
+
+const logOut = () => () => {
+    reactLocalStorage.remove(loginTokenSymbol);
+    currentLoginSubject.next(null);
+}
 
 const tryLogIn = (config: Config) => (username: string, password: string) => {
     return axios.post<string>(`${config.apiBaseUrl}/login`, {
@@ -35,8 +41,11 @@ const tryLogIn = (config: Config) => (username: string, password: string) => {
                 statusCode: res.status
             } as LoginResponse;
 
-            if(data.successful)
-                currentUserSubject.next(data.response);
+            if(data.successful){
+                const loginToken = `Bearer ${data.response}`;
+                reactLocalStorage.set(loginTokenSymbol, loginToken);
+                currentLoginSubject.next(loginToken);
+            }
 
             return data;
         })
@@ -44,7 +53,7 @@ const tryLogIn = (config: Config) => (username: string, password: string) => {
             const data = {
                 successful: false,
                 response: err.toString(),
-                statusCode: null
+                statusCode: null    
             } as LoginResponse;
             
             return data;
@@ -55,7 +64,8 @@ const create = (config: Config) => {
     const loginService: LoginService = {
         tryLogIn: tryLogIn(config),
         getAuthToken: getAuthToken(),
-        getAuthSubject: getAuthSubject()
+        getAuthSubject: getAuthSubject(),
+        logOut: logOut()
     };
 
     return loginService;

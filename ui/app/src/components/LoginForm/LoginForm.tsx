@@ -2,7 +2,7 @@ import { Button, Grid, TextField, Typography } from "@mui/material";
 import { ChangeEventHandler, useState } from "react";
 import { FormEvent } from "react";
 import { LoginResponse } from "../../services/login.service";
-import { useAppState } from "../../store/store.context";
+import { useLoginServiceContext } from "../../store";
 
 type loginFormType = {
     name: string,
@@ -10,17 +10,17 @@ type loginFormType = {
 }
 
 export const LoginForm = () => {
-    const appState = useAppState();
     const [formValues, setFormValues] = useState({
         name: "",
         password: ""
     } as loginFormType);
 
     const [loginResult, setLoginResult] = useState<LoginResponse | null>(null);
+    const loginService = useLoginServiceContext()
 
     const onLoginSubmit = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        setLoginResult(await appState.tryLogin(formValues.name, formValues.password));
+        setLoginResult(await loginService.tryLogIn(formValues.name, formValues.password));
     }
 
     const handleInputChange:ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement> = (e) => {
