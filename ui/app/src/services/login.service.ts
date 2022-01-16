@@ -67,6 +67,19 @@ const create = (config: Config) => {
         getAuthSubject: getAuthSubject(),
         logOut: logOut()
     };
+    if(loginService.getAuthToken() == null)
+        return loginService;
+    
+        axios.get(`/users/authenticated-user`, {
+            headers: {
+                'Authorization': loginService.getAuthToken()!
+            }
+        })
+            .then(x=>{
+                if(x.status != 200) {
+                    loginService.logOut();
+                }
+            })
 
     return loginService;
 }

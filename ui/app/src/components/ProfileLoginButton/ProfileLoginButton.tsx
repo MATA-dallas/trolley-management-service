@@ -6,13 +6,14 @@ export const ProfileLoginButton = () => {
     const userContext = useUserServiceContext();
     const [user, setUser] = useState(userContext.getUserSubject().getValue());
     useEffect(()=> {
-        userContext.getUserSubject().subscribe(setUser);
-    }, [])
+        const subscription = userContext.getUserSubject().subscribe(setUser);
+
+        return () => subscription.unsubscribe();
+    }, []);
+
+
     return (
-        user == null? 
-            <Button color="inherit" href="/login">Login</Button>
-            :
-            <ProfileAndLogOut />
+        <ProfileAndLogOut />
     );
 }
 
@@ -21,15 +22,20 @@ const ProfileAndLogOut = () => {
     const userContext = useUserServiceContext();
     const [user, setUser] = useState(userContext.getUserSubject().getValue());
     useEffect(()=> {
-        userContext.getUserSubject().subscribe(setUser);
+        const subscription = userContext.getUserSubject().subscribe(setUser);
+
+        return () => subscription.unsubscribe();
     }, []);
+
+    if(user == null)
+        return <></>
 
     return (
         <>
             <div style={{padding: 10}}>
                 <div>
                     <Typography variant="h6" >
-                        {user?.user}
+                        {user.user}
                     </Typography>
                 </div>
                 <div>
