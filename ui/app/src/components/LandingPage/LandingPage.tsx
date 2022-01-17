@@ -1,4 +1,6 @@
+import { Box } from "@mui/material";
 import { useEffect, useState } from "react";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { User } from "../../services/service-models";
 import { useUserServiceContext } from "../../store"
 import { LoginPage } from "../LoginPage/LoginPage";
@@ -19,5 +21,12 @@ export const LandingPage = () => {
     if(user == null)
         return <LoginPage />
     
-    return <></>
+    return (<Box style={{margin:'10px'}}>
+                <BrowserRouter>
+                    <Routes>
+                        {/* <Route path="/" element={<LoginPage/>} /> */}
+                    </Routes>
+                </BrowserRouter>
+            </Box>
+    );
 }

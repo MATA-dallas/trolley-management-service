@@ -10,13 +10,7 @@ export const App = () => {
             <loginServiceContext.Provider value={loginService}>
                 <userServiceContext.Provider value = {userService}>
                     <NavBar />
-                    <Box style={{margin:'10px'}}>
-                        <BrowserRouter>
-                            <Routes>
-                                <Route path="/" element={<LandingPage />} />
-                            </Routes>
-                        </BrowserRouter>
-                    </Box>
+                    <LandingPage />
                 </userServiceContext.Provider>
             </loginServiceContext.Provider>
         </>
