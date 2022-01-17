@@ -29,7 +29,7 @@ export const CarTable = () => {
                         Car #
                     </TableCell>
                     <TableCell>
-                        Battery %
+                        Battery
                     </TableCell>
                     <TableCell>
                         GPS Satelites
@@ -50,7 +50,7 @@ export const CarTable = () => {
                                 {car.car.car}
                             </TableCell>
                             <TableCell>
-                                {car.carState?.Battery ?? "No Value"}
+                                {(car.carState?.Battery + "%") ?? "No Value"}
                             </TableCell>
                             <TableCell>
                                 {car.carState?.NumSats ?? "No Value"}
