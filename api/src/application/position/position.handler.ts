@@ -24,7 +24,7 @@ const handleRastracStateUpdate = (emitter: RastracEventEmitter, data: Data) => {
                 return data.updatePosition(position.car, {
                     Latitude: stateItem.Latitude,
                     Longitude: stateItem.Longitude,
-                    UpdateTime: stateItem.TimeAtPosition
+                    UpdateTime: stateItem.Time
                 });
             });
             await Promise.all(updatePromises);

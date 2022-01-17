@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { User } from "../../services/service-models";
 import { useUserServiceContext } from "../../store"
+import { CarPage } from "../CarPage/CarPage";
 import { LoginPage } from "../LoginPage/LoginPage";
 
 export const LandingPage = () => {
@@ -24,7 +25,7 @@ export const LandingPage = () => {
     return (<Box style={{margin:'10px'}}>
                 <BrowserRouter>
                     <Routes>
-                        {/* <Route path="/" element={<LoginPage/>} /> */}
+                        <Route path="/" element={<CarPage/>} />
                     </Routes>
                 </BrowserRouter>
             </Box>

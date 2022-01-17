@@ -7,6 +7,7 @@ import alertApplication from './application/alert';
 import positionApplication from './application/position';
 import loginApplication from './application/login';
 import userApplication from './application/user';
+import carStateApplication from './application/car-state'
 import utils from "./util"
 import jwtAuthenticator from "./middleware/jwt.authenticator";
 
@@ -86,12 +87,20 @@ async function RegisterControllers() {
 
   }
 
+  const addCarStateRoutes = async () => {
+    const handler = await carStateApplication.handler.create(rastracEventEmitter);
+    const controller = await carStateApplication.controller.create(handler);
+
+    app.use('/car-states', controller);
+  }
+
   await Promise.all([
     addCarRoutes(), 
     addAlertRoutes(),
     addPositionRoutes(),
     addLoginRoutes(),
-    addUserRoutes()
+    addUserRoutes(),
+    addCarStateRoutes()
   ]);
 }
 
