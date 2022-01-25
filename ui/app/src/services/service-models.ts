@@ -41,7 +41,7 @@ export type Position = {
 }
 
 export type Car = {
-    ID: string,
+    ID: number,
     car: number,
     IMEI: number
 }

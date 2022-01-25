@@ -36,14 +36,20 @@ const handleRastracStateUpdate = (emitter: RastracEventEmitter, data: Data) => {
     });
 }
 
+const getById = (data: Data) => (car: number) => {
+    return data.getById(car);
+}
+
 export interface Handler {
-    getAllPositions: ReturnType<typeof getAllPositions>
+    getAllPositions: ReturnType<typeof getAllPositions>,
+    getById: ReturnType<typeof getById>
 }
 
 const create = (data: Data, emitter: RastracEventEmitter) : Handler => {
     handleRastracStateUpdate(emitter, data)
     return {
-        getAllPositions: getAllPositions(data)
+        getAllPositions: getAllPositions(data),
+        getById: getById(data),
     };
 }
 

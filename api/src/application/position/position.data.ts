@@ -4,6 +4,7 @@ import knex, { Knex } from "knex";
 
 export interface Data {
     getAll: ReturnType<typeof getAll>;
+    getById: ReturnType<typeof getById>
     getCarPositions: ReturnType<typeof getCarPositions>;
     updatePosition: ReturnType<typeof updatePosition>;
 }
@@ -12,6 +13,12 @@ export type UpdatePositionParams = {
     Latitude: number,
     Longitude: number,
     UpdateTime: Date
+}
+
+export const getById = (positions: () => Knex.QueryBuilder<any, Position>) => async (car: number):Promise<Position> => {
+    return (await positions().where({
+        car
+    }).select(allKeysOfPosition))[0];
 }
 
 export const updatePosition = (positions: () => Knex.QueryBuilder<any, Position>) => async (car: number, values: UpdatePositionParams) => {
@@ -36,7 +43,7 @@ export const getCarPositions = (carPositions: () => Knex.QueryBuilder<any, CarPo
 }
 
 export const getAll = (positions: () => Knex.QueryBuilder<any, Position[]>) => async () => {
-    return (await positions().select(allKeysOfPosition));
+    return (await positions().select(allKeysOfPosition) as Position[]);
 }
 
 export async function create (data: DataClient): Promise<Data> {
@@ -46,7 +53,8 @@ export async function create (data: DataClient): Promise<Data> {
     return {
         getAll: getAll(positions),
         getCarPositions: getCarPositions(carPositions),
-        updatePosition: updatePosition(positions)
+        updatePosition: updatePosition(positions),
+        getById: getById(positions)
     };
 }
 

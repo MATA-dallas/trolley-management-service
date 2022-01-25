@@ -2,6 +2,7 @@ import { cardMediaClasses, Table, TableBody, TableCell, TableHead, TableRow } fr
 import { useEffect, useState } from "react"
 import { CarDataItem } from "../../services/service-models"
 import { useCarDataServiceContext } from "../../store"
+import { CarSwitch } from "./CarSwitch"
 
 export const CarPage = () => {
     return <CarTable />
@@ -59,7 +60,9 @@ export const CarTable = () => {
                                 {car.carPosition?.updateTime == null ? "" : formatDate(car.carPosition?.updateTime)}
                             </TableCell>
                             <TableCell>
-                                {car.carPosition?.manualStatus}
+                                <CarSwitch 
+                                    manualStatus={car.carPosition?.manualStatus??""}
+                                    carId={ car.car.ID } />
                             </TableCell>
                         </TableRow>
                     )
