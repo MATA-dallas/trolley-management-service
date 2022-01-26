@@ -1,8 +1,8 @@
 import { DataClient } from "../../data-providers";
-import { allKeysOfCarPosition, allKeysOfPosition, CarPosition, Position } from "./position.model";
+import { allKeysOfCarPosition, allKeysOfPosition, CarPosition, ManualStatus, Position } from "./position.model";
 import knex, { Knex } from "knex";
 
-export interface Data {
+export type Data = {
     getAll: ReturnType<typeof getAll>;
     getById: ReturnType<typeof getById>
     getCarPositions: ReturnType<typeof getCarPositions>;
@@ -12,6 +12,7 @@ export interface Data {
 export type UpdatePositionParams = {
     Latitude: number,
     Longitude: number,
+    ManualStatus: ManualStatus,
     UpdateTime: Date
 }
 
@@ -21,13 +22,13 @@ export const getById = (positions: () => Knex.QueryBuilder<any, Position>) => as
     }).select(allKeysOfPosition))[0];
 }
 
-export const updatePosition = (positions: () => Knex.QueryBuilder<any, Position>) => async (car: number, values: UpdatePositionParams) => {
+export const updatePosition = (positions: () => Knex.QueryBuilder<any, Position>) => async (car: number, values: Partial<UpdatePositionParams>) => {
     return positions().where({
         car: car
     })
     .update({
         ...values,
-        UpdateTime: new Date(values.UpdateTime)
+        UpdateTime: new Date(values.UpdateTime?? new Date())
     })
     .then(rows=> {
         return rows > 0;

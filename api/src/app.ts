@@ -65,7 +65,7 @@ async function RegisterControllers() {
   const addPositionRoutes = async() => {
     const data = await positionApplication.data.create(dataProvider);
     const handler = await positionApplication.handler.create(data, rastracEventEmitter);
-    const router = await positionApplication.controller.create(handler, util);
+    const router = await positionApplication.controller.create(handler, util, authMiddleware);
 
     app.use('/positions', router);
   }

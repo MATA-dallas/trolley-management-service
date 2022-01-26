@@ -1,7 +1,7 @@
 import util, { Util } from "../../util/util";
 import { RastracEventEmitter, RastracProvider, TrolleyCarState } from "../../data-providers/rastrac.provider";
 import { Data } from "./position.data"
-import { Position } from "./position.model";
+import { ManualStatus, Position } from "./position.model";
 
 type CachedPositions = {
     positions: Position[] | null;
@@ -40,7 +40,16 @@ const getById = (data: Data) => (car: number) => {
     return data.getById(car);
 }
 
+const setManualStatus = (data: Data) => (car: number, manualStatus: ManualStatus) => {
+    if(manualStatus != "" && manualStatus != "OFF")
+        throw new Error(`manual status '${manualStatus}' not valid`);
+    data.updatePosition(car, {
+        ManualStatus: manualStatus
+    })
+}
+
 export interface Handler {
+    setManualStatus: ReturnType<typeof setManualStatus>
     getAllPositions: ReturnType<typeof getAllPositions>,
     getById: ReturnType<typeof getById>
 }
@@ -50,6 +59,7 @@ const create = (data: Data, emitter: RastracEventEmitter) : Handler => {
     return {
         getAllPositions: getAllPositions(data),
         getById: getById(data),
+        setManualStatus: setManualStatus(data)
     };
 }
 
