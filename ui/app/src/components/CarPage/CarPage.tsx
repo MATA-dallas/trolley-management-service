@@ -39,7 +39,7 @@ export const CarTable = () => {
                         Last Updated
                     </TableCell>
                     <TableCell>
-                        Manual Status
+                        Show On Tracker
                     </TableCell>
                 </TableRow>
             </TableHead>
