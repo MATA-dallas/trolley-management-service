@@ -1,11 +1,13 @@
 import axios, { AxiosResponse } from "axios"
-import { BehaviorSubject } from "rxjs"
+import { BehaviorSubject, config } from "rxjs"
 import { Config } from "../util/config"
+import { LoginService } from "./login.service"
 import { Car, CarData, CarDataItem, CarState, Position } from "./service-models"
 
 export type CarDataService = {
     getCarDataSubject: ReturnType<typeof getCarDataSubject>,
-    getCarData: ReturnType<typeof getCarData>
+    getCarData: ReturnType<typeof getCarData>,
+    toggleCarPosition: ReturnType<typeof toggleCarPosition>
 }
 
 const getCarDataSubject = () => () => carDataSubject;
@@ -42,10 +44,42 @@ const getCarData = (config: Config) => async () => {
     return carData;
 }
 
-const create = (config: Config) => {
+const toggleCarPosition = (config: Config, loginService: LoginService) => async (carNumber: number) => {
+    const car = carDataSubject.getValue().cars.find(x=>x.car.car == carNumber);
+    if(car == null)
+        throw new Error(`car ${carNumber} not found in subject`);
+
+    const response = await axios.post<Position>(`${config.apiBaseUrl}/positions/${carNumber}/set-manual-status`, {
+        manualStatus: car?.carPosition?.manualStatus == "OFF" ? "" : "OFF"
+    },{
+        headers: {
+            Authorization: loginService.getAuthToken()!
+        }
+    });
+
+    if(response.status == 200){
+        const carValues = carDataSubject.getValue();
+        const selectedCarIndex = carValues.cars.indexOf(car);
+        const newCars = [
+            ...carValues.cars,   
+        ]
+        newCars[selectedCarIndex] = {
+            ...newCars[selectedCarIndex],
+            carPosition: response.data
+        }
+
+        carDataSubject.next({
+            ...carDataSubject.getValue(),
+            cars: newCars
+        });
+    }
+}
+
+const create = (config: Config, loginService: LoginService) => {
     const dataService: CarDataService = {
         getCarDataSubject: getCarDataSubject(),
-        getCarData: getCarData(config)
+        getCarData: getCarData(config),
+        toggleCarPosition: toggleCarPosition(config, loginService)
     }
 
     dataService.getCarData();

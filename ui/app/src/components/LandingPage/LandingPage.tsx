@@ -5,6 +5,7 @@ import { User } from "../../services/service-models";
 import { useUserServiceContext } from "../../store"
 import { CarPage } from "../CarPage/CarPage";
 import { LoginPage } from "../LoginPage/LoginPage";
+import NavBar from "../NavBar/NavBar";
 
 export const LandingPage = () => {
     const userContext = useUserServiceContext();
@@ -22,12 +23,16 @@ export const LandingPage = () => {
     if(user == null)
         return <LoginPage />
     
-    return (<Box style={{margin:'10px'}}>
-                <BrowserRouter>
-                    <Routes>
-                        <Route path="/" element={<CarPage/>} />
-                    </Routes>
-                </BrowserRouter>
-            </Box>
+    return (
+            <>
+                <NavBar />
+                <Box style={{margin:'10px'}}>   
+                    <BrowserRouter>
+                        <Routes>
+                            <Route path="/" element={<CarPage/>} />
+                        </Routes>
+                    </BrowserRouter>
+                </Box>
+            </>
     );
 }

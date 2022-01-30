@@ -1,4 +1,5 @@
 import { Switch } from "@mui/material"
+import { useCarDataServiceContext } from "../../store";
 
 export type CarSwitchProps = {
     manualStatus: "OFF" | "",
@@ -6,8 +7,9 @@ export type CarSwitchProps = {
 }
 
 export const CarSwitch = ({manualStatus, carId} : CarSwitchProps) => {
+    const carData = useCarDataServiceContext();
     
     return (
-        <Switch checked={manualStatus != "OFF"} />
+        <Switch checked={manualStatus != "OFF"} onClick={()=> carData.toggleCarPosition(carId)} />
     )
 }

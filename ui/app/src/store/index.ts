@@ -6,7 +6,7 @@ import config from "../util/config";
 
 export const loginService = login.create(config);
 export const userService = user.create(loginService, config);
-export const carDataService = carData.create(config);
+export const carDataService = carData.create(config, loginService);
 
 export const loginServiceContext = createContext<LoginService>(loginService);
 export const userServiceContext = createContext<UserService>(userService);

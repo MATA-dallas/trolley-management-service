@@ -28,7 +28,8 @@ const create = (handler: Handler, util: Util, authMiddleware: any) => {
         res: Response<Position>) => {
             await handler.setManualStatus(req.params.id, req.body.manualStatus);
             
-            res.json(await handler.getById(req.params.id))
+            const response = await handler.getById(req.params.id);
+            res.json(response);
     })
     
     return router;

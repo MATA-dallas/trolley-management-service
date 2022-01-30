@@ -10,7 +10,6 @@ export const App = () => {
             <carDataServiceContext.Provider value = {carDataService}>
                 <loginServiceContext.Provider value = {loginService}>
                     <userServiceContext.Provider value = {userService}>
-                        <NavBar />
                         <LandingPage />
                     </userServiceContext.Provider>
                 </loginServiceContext.Provider>

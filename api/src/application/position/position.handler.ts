@@ -43,7 +43,7 @@ const getById = (data: Data) => (car: number) => {
 const setManualStatus = (data: Data) => (car: number, manualStatus: ManualStatus) => {
     if(manualStatus != "" && manualStatus != "OFF")
         throw new Error(`manual status '${manualStatus}' not valid`);
-    data.updatePosition(car, {
+    return data.updatePosition(car, {
         ManualStatus: manualStatus
     })
 }

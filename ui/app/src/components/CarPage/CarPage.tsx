@@ -46,7 +46,7 @@ export const CarTable = () => {
             <TableBody>
                 {cars?.map(car=> {
                     return (
-                        <TableRow key={car.car.car}>
+                        <TableRow key={car.car.ID}>
                             <TableCell>
                                 {car.car.car}
                             </TableCell>
@@ -62,7 +62,7 @@ export const CarTable = () => {
                             <TableCell>
                                 <CarSwitch 
                                     manualStatus={car.carPosition?.manualStatus??""}
-                                    carId={ car.car.ID } />
+                                    carId={ car.car.car } />
                             </TableCell>
                         </TableRow>
                     )
