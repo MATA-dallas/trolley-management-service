@@ -9,6 +9,7 @@ export type TrolleyCarState = {
     Latitude: number,
     Longitude: number,
     TimeAtPosition: Date,
+    Time: Date,
     Advisories: "BARN" | "CITYPLACE" | ""
 }
 
@@ -28,7 +29,10 @@ const create = (emitter: RastracEventEmitter): RastracProvider => {
         });
         if(states.status != 200)
             console.error(`axios called failed with code ${states.status}: ${states.data}`);
-        emitter.emit("trolleyCarStateUpdated", states.data);
+        
+        // filter events to remove maintenance events, we just want the events that have position on them
+        const locationStates = states.data.filter(x=>x["Latitude"] != null);
+        emitter.emit("trolleyCarStateUpdated", locationStates);
     });
 
     return {};

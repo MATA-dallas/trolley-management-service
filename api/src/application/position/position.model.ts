@@ -1,11 +1,13 @@
 
+export type ManualStatus = 'OFF' | '';
+
 export type Position = {
     car: number,
     latitude: number,
     longitude: number,
     namedPoint: string,
     updateTime: Date,
-    manualStatus: 'OFF' | ''
+    manualStatus: ManualStatus
 }
 
 export type CarPosition = Position & {

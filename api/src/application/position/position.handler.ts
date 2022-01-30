@@ -1,7 +1,7 @@
 import util, { Util } from "../../util/util";
 import { RastracEventEmitter, RastracProvider, TrolleyCarState } from "../../data-providers/rastrac.provider";
 import { Data } from "./position.data"
-import { Position } from "./position.model";
+import { ManualStatus, Position } from "./position.model";
 
 type CachedPositions = {
     positions: Position[] | null;
@@ -24,7 +24,7 @@ const handleRastracStateUpdate = (emitter: RastracEventEmitter, data: Data) => {
                 return data.updatePosition(position.car, {
                     Latitude: stateItem.Latitude,
                     Longitude: stateItem.Longitude,
-                    UpdateTime: stateItem.TimeAtPosition
+                    UpdateTime: stateItem.Time
                 });
             });
             await Promise.all(updatePromises);
@@ -36,14 +36,30 @@ const handleRastracStateUpdate = (emitter: RastracEventEmitter, data: Data) => {
     });
 }
 
+const getById = (data: Data) => (car: number) => {
+    return data.getById(car);
+}
+
+const setManualStatus = (data: Data) => (car: number, manualStatus: ManualStatus) => {
+    if(manualStatus != "" && manualStatus != "OFF")
+        throw new Error(`manual status '${manualStatus}' not valid`);
+    return data.updatePosition(car, {
+        ManualStatus: manualStatus
+    })
+}
+
 export interface Handler {
-    getAllPositions: ReturnType<typeof getAllPositions>
+    setManualStatus: ReturnType<typeof setManualStatus>
+    getAllPositions: ReturnType<typeof getAllPositions>,
+    getById: ReturnType<typeof getById>
 }
 
 const create = (data: Data, emitter: RastracEventEmitter) : Handler => {
     handleRastracStateUpdate(emitter, data)
     return {
-        getAllPositions: getAllPositions(data)
+        getAllPositions: getAllPositions(data),
+        getById: getById(data),
+        setManualStatus: setManualStatus(data)
     };
 }
 

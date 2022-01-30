@@ -70,7 +70,7 @@ const create = (config: Config) => {
     if(loginService.getAuthToken() == null)
         return loginService;
     
-        axios.get(`/users/authenticated-user`, {
+        axios.get(`${config.apiBaseUrl}/users/authenticated-user`, {
             headers: {
                 'Authorization': loginService.getAuthToken()!
             }
