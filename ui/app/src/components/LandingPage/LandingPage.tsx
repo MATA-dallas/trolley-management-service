@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { User } from "../../services/service-models";
 import { useUserServiceContext } from "../../store"
+import { AlertPage } from "../AlertPage/AlertPage";
 import { CarPage } from "../CarPage/CarPage";
 import { LoginPage } from "../LoginPage/LoginPage";
 import NavBar from "../NavBar/NavBar";
@@ -25,14 +26,15 @@ export const LandingPage = () => {
     
     return (
             <>
-                <NavBar />
-                <Box style={{margin:'10px'}}>   
-                    <BrowserRouter>
+                <BrowserRouter>
+                    <NavBar />
+                    <Box style={{margin:'10px'}}>   
                         <Routes>
                             <Route path="/" element={<CarPage/>} />
+                            <Route path="/alerts" element={<AlertPage/>} />
                         </Routes>
-                    </BrowserRouter>
-                </Box>
+                    </Box>
+               </BrowserRouter>
             </>
     );
 }

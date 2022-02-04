@@ -21,7 +21,7 @@ export type RastracEventEmitter = TypedEmitter<RastracEvents>;
 export type RastracProvider = {};
 
 const create = (emitter: RastracEventEmitter): RastracProvider => {
-    cron.schedule("*/5 * * * * *", async function() {
+    cron.schedule("*/59 * * * * *", async function() {
         const states = await axios.get<TrolleyCarState[]>(`${config.Rastrac.baseUrl}/rtapi/api/state`, {
             headers: {
                 authorization: `Basic ${config.Rastrac.basicAuthToken}`
