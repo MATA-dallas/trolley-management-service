@@ -19,9 +19,6 @@ const getAlertById = (alerts: Data) => async (id: number) => {
     return await alerts.getAlertById(id);
 }
 
-const deleteAlert = (alerts: Data) => () => {
-    return await alerts.
-}
 
 export interface Handler {
     getAlertById: ReturnType<typeof getAlertById>,
