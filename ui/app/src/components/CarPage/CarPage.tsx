@@ -2,15 +2,11 @@ import { cardMediaClasses, Table, TableBody, TableCell, TableHead, TableRow } fr
 import { useEffect, useState } from "react"
 import { CarDataItem } from "../../services/service-models"
 import { useCarDataServiceContext } from "../../store"
+import { formatDate } from "../../util/util"
 import { CarSwitch } from "./CarSwitch"
 
 export const CarPage = () => {
     return <CarTable />
-}
-
-const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return (date.getMonth()+1) +"/"+ date.getDate() + "/" + date.getFullYear() + " " + date.getHours() + ":" + date.getMinutes();
 }
 
 export const CarTable = () => {
