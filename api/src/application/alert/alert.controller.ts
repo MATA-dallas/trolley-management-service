@@ -19,6 +19,11 @@ const create = (handler: Handler, util: Util, authMiddleware: any) => {
         res.json(await handler.getAlertById(id));
     });
 
+    // router.delete('/', authMiddleware, async (req: Request, res: Response)=> {
+        
+    //     res.status(204).end();
+    // });
+
     return router;
 }
 

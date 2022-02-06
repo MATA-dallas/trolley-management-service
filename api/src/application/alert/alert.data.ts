@@ -19,9 +19,12 @@ const getAlertById = (alerts: () => Knex.QueryBuilder<any, any>) => async (id: n
     return alert[0];
 }
 
-const getAll = (alerts: () => Knex.QueryBuilder<any, any>) => async (limit:number | null) => {
+const getAll = (alerts: () => Knex.QueryBuilder<any, any>) => async (limit:number | null, active: boolean) => {
     limit = limit ?? 5;
     return (await alerts()
+        .where({
+            active
+        })
         .select<any, Alert[]>(allKeysOfAlert)
         .orderBy('posted','desc')
         .limit(limit)) as Alert[];

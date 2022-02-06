@@ -59,18 +59,18 @@ const NavBar = () => {
 
 const list = (toggleDrawer: (isOpen: boolean) => any) => (
     <Box
-        sx={{ }}
+        sx={{ padding: "15px" }}
         role="presentation"
         onClick={toggleDrawer(false)}
     >
         <List>
-            <ListItem component={Link} to="/" >
+            <ListItem button component={Link} to="/" >
                 <ListItemIcon>
                     <CarRentalIcon />
                 </ListItemIcon>
                 <ListItemText primary={"cars"} />
             </ListItem>
-            <ListItem component={Link} to="/alerts" >
+            <ListItem button component={Link} to="/alerts" >
                 <ListItemIcon>
                     <AddAlertIcon />
                 </ListItemIcon>

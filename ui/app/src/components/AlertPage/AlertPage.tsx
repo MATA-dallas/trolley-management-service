@@ -1,11 +1,27 @@
-import { Table, TableCell, TableHead, TableRow } from "@mui/material";
+import { Table, TableBody, TableCell, TableHead, TableRow } from "@mui/material";
+import { useEffect, useState } from "react";
+import { Alert } from "../../services/service-models";
+import { useAlertServiceContext } from "../../store";
+import { formatDate } from "../../util/util";
 
 
 export const AlertPage = () => {
+    const alertService = useAlertServiceContext();
+    const [alerts, setAlerts] = useState([] as Alert[]);
+    useEffect(()=>{
+        const sub = alertService.getAlertDataSubject().subscribe((alertData)=>{
+            setAlerts(alertData);
+        });
+        alertService.refresh();
+        return sub.unsubscribe;
+    }, []);
     return (
         <>
+            <div>
+                {}
+            </div>
             <Table>
-                <TableHead> 
+                <TableHead>
                     <TableRow>
                         <TableCell>
                             
@@ -18,9 +34,22 @@ export const AlertPage = () => {
                         </TableCell>
                     </TableRow>
                 </TableHead>
-                {/* <TableBody>
-                    
-                </TableBody> */}
+                <TableBody>
+                    {alerts.map(alert=>
+                        (
+                            <TableRow key={alert.ID}>
+                                <TableCell>
+                                    
+                                </TableCell>
+                                <TableCell>
+                                    {alert.Alert.match('>.*<\/')![0].replace('>','').replace('</','')}
+                                </TableCell>
+                                <TableCell>
+                                    {formatDate(alert.Posted.toString())}
+                                </TableCell>
+                            </TableRow>
+                        ))}
+                </TableBody>
             </Table>
         </>
     );

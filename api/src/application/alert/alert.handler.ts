@@ -3,7 +3,7 @@ import { Util } from "../../util/util";
 import { Data } from "./alert.data"
 
 const getAllAlerts = (alerts: Data) => async (limit: number | null) => {
-    return alerts.getAll(limit);
+    return alerts.getAll(limit, true);
 }
 
 const addAlert = (alerts: Data, util: Util) => async (alertText: string | null): Promise<number> => {
@@ -17,6 +17,10 @@ const addAlert = (alerts: Data, util: Util) => async (alertText: string | null):
 
 const getAlertById = (alerts: Data) => async (id: number) => {
     return await alerts.getAlertById(id);
+}
+
+const deleteAlert = (alerts: Data) => () => {
+    return await alerts.
 }
 
 export interface Handler {
