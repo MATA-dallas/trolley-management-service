@@ -8,6 +8,9 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     steps:
+      - name: Add mask
+        run: |
+          echo "::add-mask::{{ secrets.ENV_FILE }}" 
       - name: checkout
         uses: actions/checkout@v2
       - name: login to dockerhub
