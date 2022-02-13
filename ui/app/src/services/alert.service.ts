@@ -1,6 +1,7 @@
 import axios, { AxiosResponse } from "axios";
 import { BehaviorSubject } from "rxjs"
 import { Config } from "../util/config";
+import loginService, { LoginService } from "./login.service";
 import { Alert } from "./service-models";
 
 const alertSubject = new BehaviorSubject<Alert[]>([]);
@@ -17,7 +18,8 @@ function tryGetValues<T>(apiCall:Promise<AxiosResponse<T>>) {
 export type AlertDataService = {
     getAlertData : ReturnType<typeof getAlertData>,
     getAlertDataSubject : ReturnType<typeof getAlertDataSubject>,
-    refresh : ReturnType<typeof refresh>
+    refresh : ReturnType<typeof refresh>,
+    createAlert: ReturnType<typeof createAlert>
 }
 
 const getAlertData = () => async () => {
@@ -33,11 +35,23 @@ const refresh = (config: Config) => async () => {
     alertSubject.next(alertData);
 }
 
-const create = (config: Config) => {
+const createAlert = (config: Config, loginService: LoginService) => async (message: string) => {
+    const response = await axios.post<Alert>(`${config.apiBaseUrl}/alerts`, {
+        alertText: message
+    },{
+        headers: {
+            Authorization: loginService.getAuthToken()!
+        }
+    });
+    await refresh(config)();
+}
+
+const create = (config: Config, loginService: LoginService) => {
     const service: AlertDataService =  {
         getAlertData: getAlertData(),
         getAlertDataSubject: getAlertDataSubject(),
-        refresh: refresh(config)
+        refresh: refresh(config),
+        createAlert: createAlert(config, loginService)
     };
 
     return service;
