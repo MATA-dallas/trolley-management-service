@@ -36,7 +36,7 @@ jobs:
           cat <<EOF > ./api/.env
           ${{ secrets.ENV_FILE }}
           EOF
-          kubectl create configmap trolley-management-api-config --from-env-file=./api/.env -o yaml
+          kubectl create configmap trolley-management-api-config --from-env-file=./api/.env -o yaml &>/dev/null
           kubectl apply -f ./build/trolley-management-service.yml
           kubectl rollout restart deploy
           
