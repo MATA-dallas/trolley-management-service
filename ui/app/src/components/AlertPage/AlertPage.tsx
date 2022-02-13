@@ -1,10 +1,45 @@
-import { Table, TableBody, TableCell, TableHead, TableRow } from "@mui/material";
+import { Button, Divider, Table, TableBody, TableCell, TableHead, TableRow, TextField, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { Alert } from "../../services/service-models";
 import { useAlertServiceContext } from "../../store";
 import { formatDate } from "../../util/util";
+import { IconButton } from '@mui/material';
+import AddIcon from '@mui/icons-material/Add';
+import { AddAlert } from "@mui/icons-material";
 
 
+const NewAlert = () => {
+    const alertService = useAlertServiceContext();
+    const [message, setMessage] = useState('');
+    const addAlert = async () => {
+        if(message == '')
+            return;
+        await alertService.createAlert(message);
+        setMessage('');
+    }
+    return (
+        <>
+            <Typography variant="h4">
+                Add Alert
+            </Typography>
+            <Typography variant="body1">
+                Enter alert Message:
+            </Typography>
+            <TextField 
+                value={message} 
+                onChange={e=>setMessage(e.currentTarget.value)} 
+                onKeyPress={e=>{if(e.key == 'Enter') addAlert()} }
+                id="outlined-basic" 
+                label="Message" 
+                variant="outlined" />
+            <div>
+                <Button onClick={() => addAlert()} variant="contained">
+                    Create Alert
+                </Button>
+            </div>
+        </>
+    );
+}
 export const AlertPage = () => {
     const alertService = useAlertServiceContext();
     const [alerts, setAlerts] = useState([] as Alert[]);
@@ -17,9 +52,12 @@ export const AlertPage = () => {
     }, []);
     return (
         <>
-            <div>
-                {}
-            </div>
+            <NewAlert/>
+            <div style={{padding:'5px'}}></div>
+            <Divider />
+            <Typography variant="h4">
+                Alerts
+            </Typography>
             <Table>
                 <TableHead>
                     <TableRow>
