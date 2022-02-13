@@ -45,8 +45,7 @@ async function RegisterControllers() {
   const rastracEventEmitter = new EventEmitter() as RastracEventEmitter;
   const mysqlInstance = await mySqlProvider.create();
   const dataProvider = await dataProviders.create(rastracEventEmitter, mysqlInstance);
-
-
+  
   const addCarRoutes = async () => {
     const data = await carApplication.data.create(dataProvider);
     const handler = await carApplication.handler.create(data);
@@ -102,6 +101,9 @@ async function RegisterControllers() {
     addUserRoutes(),
     addCarStateRoutes()
   ]);
+
+  app.get('/heart-beat', (req, res)=>{res.end("hello world")});
+  app.use('/',express.static('src/static'));
 }
 
 async function startServer(){
@@ -130,8 +132,7 @@ async function startServer(){
   }
 
   await RegisterControllers();
-  app.get('/', (req, res)=>{res.end("hello world")});
-
+  
   // note: the not found handler should be registered at the very end
   app.use(errorHandler);
   app.use(errorNotFoundHandler);

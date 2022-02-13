@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>MATA Live Map</title>
+
+    <link rel="apple-touch-icon" sizes="57x57" href="images/apple-icon-57x57.png" />
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-icon-72x72.png" />
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-icon-114x114.png" />
+    <link rel="apple-touch-icon" sizes="144x144" href="images/apple-icon-144x144.png" />
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCuewi59iOI1A4dRc3KfjS24czLtsI9__k&callback=initialize"
+  type="text/javascript"></script>
+
+<script>
+timeID = "";
+
+function loadScript() {
+  return;
+
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src = 'https://maps.googleapis.com/maps/api/js?v=3.exp&key=AIzaSyA6zSrqOIMWYFO-MMcXZGA3NHwWEPUNG2U&callback=initialize';
+  document.body.appendChild(script);
+  $ ( "#statusDiv" ).css ( {left: $ ( "#serviceFrame" ).width() + 15 } );
+}
+</script>
+
+<script type="text/javascript">
+
+function checkTime()
+{
+   var sundayOff = "00:45";
+   var sundayOn = "09:45";
+   var sundayOff2 = "22:30";
+   var mondayOn = "6:45";
+   var mondayOff = "22:30";
+   var tuesdayOn = "6:45";
+   var tuesdayOff = "22:30";
+   var wednesdayOn = "6:45";
+   var wednesdayOff = "22:30";
+   var thursdayOn = "6:45";
+   var thursdayOff = "22:30";
+   var fridayOn = "6:45";
+   var saturdayOff = "02:45";
+   var saturdayOn = "9:45";
+
+   mapOn = true;
+
+   var now = new Date();
+   var time = new Date ( 2015 , 1 , 1 , now.getHours() , now.getMinutes() );
+
+   switch ( now.getDay() )
+   {
+      case 0:
+      {
+         offTime = sundayOff.split ( ":" );
+         offHour = offTime [ 0 ];
+         offMinute = offTime [ 1 ];
+         offTime = new Date ( 2015 , 1 , 1 , offHour , offMinute );
+
+         off2Time = sundayOff2.split ( ":" );
+         off2Hour = off2Time [ 0 ];
+         off2Minute = off2Time [ 1 ];
+         off2Time = new Date ( 2015 , 1 , 1 , off2Hour , off2Minute );
+
+         onTime = sundayOn.split ( ":" );
+         onHour = onTime [ 0 ];
+         onMinute = onTime [ 1 ];
+         onTime = new Date ( 2015 , 1 , 1 , onHour , onMinute );
+
+         if ( time > offTime && time < onTime ) mapOn = false;
+         else if ( time > off2Time ) mapOn = false;
+         //mapOn = true;
+      }
+      break;
+
+      case 1:
+      {
+         offTime = mondayOff.split ( ":" );
+         offHour = offTime [ 0 ];
+         offMinute = offTime [ 1 ];
+         offTime = new Date ( 2015 , 1 , 1 , offHour , offMinute );
+         onTime = mondayOn.split ( ":" );
+         onHour = onTime [ 0 ];
+         onMinute = onTime [ 1 ];
+         onTime = new Date ( 2015 , 1 , 1 , onHour , onMinute );
+
+         if ( time < onTime || time > offTime ) 
+         {
+            mapOn = false;
+         }
+      }
+      break;
+
+      case 2:
+      {
+         offTime = tuesdayOff.split ( ":" );
+         offHour = offTime [ 0 ];
+         offMinute = offTime [ 1 ];
+         offTime = new Date ( 2015 , 1 , 1 , offHour , offMinute );
+         onTime = tuesdayOn.split ( ":" );
+         onHour = onTime [ 0 ];
+         onMinute = onTime [ 1 ];
+         onTime = new Date ( 2015 , 1 , 1 , onHour , onMinute );
+
+         if ( time < onTime || time > offTime ) 
+         {
+            mapOn = false;
+         }
+      }
+      break;
+
+      case 3:
+      {
+         offTime = wednesdayOff.split ( ":" );
+         offHour = offTime [ 0 ];
+         offMinute = offTime [ 1 ];
+         offTime = new Date ( 2015 , 1 , 1 , offHour , offMinute );
+         onTime = wednesdayOn.split ( ":" );
+         onHour = onTime [ 0 ];
+         onMinute = onTime [ 1 ];
+         onTime = new Date ( 2015 , 1 , 1 , onHour , onMinute );
+
+         if ( time < onTime || time > offTime ) 
+         {
+            mapOn = false;
+         }
+      }
+      break;
+
+      case 4:
+      {
+         offTime = thursdayOff.split ( ":" );
+         offHour = offTime [ 0 ];
+         offMinute = offTime [ 1 ];
+         offTime = new Date ( 2015 , 1 , 1 , offHour , offMinute );
+         onTime = thursdayOn.split ( ":" );
+         onHour = onTime [ 0 ];
+         onMinute = onTime [ 1 ];
+         onTime = new Date ( 2015 , 1 , 1 , onHour , onMinute );
+
+         if ( time < onTime || time > offTime ) 
+         {
+            mapOn = false;
+         }
+      }
+      break;
+
+      case 5:
+      {
+         onTime = fridayOn.split ( ":" );
+         onHour = onTime [ 0 ];
+         onMinute = onTime [ 1 ];
+         onTime = new Date ( 2015 , 1 , 1 , onHour , onMinute );
+
+         if ( time < onTime ) 
+         {
+            mapOn = false;
+         }
+      }
+      break;
+
+      case 6:
+      {
+         offTime = saturdayOff.split ( ":" );
+         offHour = offTime [ 0 ];
+         offMinute = offTime [ 1 ];
+         offTime = new Date ( 2015 , 1 , 1 , offHour , offMinute );
+         onTime = saturdayOn.split ( ":" );
+         onHour = onTime [ 0 ];
+         onMinute = onTime [ 1 ];
+         onTime = new Date ( 2015 , 1 , 1 , onHour , onMinute );
+
+         if ( time < offTime ) mapOn = true;
+         else if ( time < onTime ) 
+         {
+            mapOn = false;
+         }
+      }
+      break;
+
+   }
+
+   if ( mapOn == false )
+   {
+      document.getElementById ( "statusDiv" ).style.visibility = "hidden";
+      document.getElementById ( "noservice" ).style.display = "inline";
+      //document.getElementById ( "hours" ).style.display = "inline";
+      document.getElementById ( "closed" ).style.display = "inline";
+      document.getElementById ( "map-canvas" ).style.opacity = ".2";
+   }
+   else
+   {
+      document.getElementById ( "statusDiv" ).style.visibility = "visible";
+      document.getElementById ( "noservice" ).style.display = "none";
+      //document.getElementById ( "hours" ).style.display = "none";
+      document.getElementById ( "closed" ).style.display = "none";
+      document.getElementById ( "map-canvas" ).style.opacity = "1";
+   }
+}
+
+        var stop = new Array();
+        stop.push([-96.79410564416, 32.80555966576, 0.0]);
+        stop.push([-96.79616376892, 32.80732958393, 0.0]);
+        stop.push([-96.7966524, 32.807744, 0.0]);
+        stop.push([-96.7960768, 32.8085351, 0.0]);
+        stop.push([-96.7965101, 32.8092046, 0.0]);
+        stop.push([-96.7982919, 32.808349, 0.0]);
+        stop.push([-96.7994380749, 32.80655745164, 0.0]);
+        stop.push([-96.8002596, 32.8052061, 0.0]);
+        stop.push([-96.8013049, 32.8036102, 0.0]);
+        stop.push([-96.8023412, 32.8020265, 0.0]);
+        stop.push([-96.8009226, 32.7996113, 0.0]);
+        stop.push([-96.80138254049, 32.79775684561, 0.0]);
+        stop.push([-96.8017137, 32.796545, 0.0]);
+        stop.push([-96.8024498, 32.7941761, 0.0]);
+        stop.push([-96.8028118, 32.7931065, 0.0]);
+        stop.push([-96.80324815281, 32.79179153718, 0.0]);
+        stop.push([-96.80358208783, 32.79090258436, 0.0]);
+        stop.push([-96.8037426, 32.7890534, 0.0]);
+        stop.push([-96.8023548, 32.7878996, 0.0]);
+        stop.push([-96.8006637, 32.7864781, 0.0]);
+        stop.push([-96.7998385, 32.7857463, 0.0]);
+        stop.push([-96.7984585, 32.7845559, 0.0]);
+        stop.push([-96.7971551, 32.7850242, 0.0]);
+        stop.push([-96.7962893, 32.7857894, 0.0]);
+        stop.push([-96.79718624602, 32.78667448916, 0.0]);
+        stop.push([-96.79863810606, 32.78783148557, 0.0]);
+        stop.push([-96.8000266, 32.7886044, 0.0]);
+        stop.push([-96.8012943, 32.7896539, 0.0]);
+        stop.push([-96.8029025, 32.7911497, 0.0]);
+        stop.push([-96.80321797863, 32.79177180839, 0.0]);
+        stop.push([-96.8029083, 32.7926984, 0.0]);
+        stop.push([-96.8025591, 32.79377, 0.0]);
+        stop.push([-96.8017843, 32.7961842, 0.0]);
+        stop.push([-96.8011943, 32.7983123, 0.0]);
+        stop.push([-96.8009095, 32.7995402, 0.0]);
+        stop.push([-96.8002826, 32.8028615, 0.0]);
+        stop.push([-96.7997819, 32.8035973, 0.0]);
+        stop.push([-96.798459, 32.8056749, 0.0]);
+
+        var points = new Array();
+        points.push ( [96.800921,32.801866,0.0] );
+        points.push ( [96.797218,32.807605,0.0] );
+        points.push ( [96.796825,32.807928,0.0] );
+        points.push ( [96.79408700000002,32.80555,0.0] );
+        points.push ( [96.79405200000001,32.80558,0.0] );
+        points.push ( [96.796784,32.807965,0.0] );
+        points.push ( [96.79587,32.808701,0.0] );
+        points.push ( [96.796814,32.809536,0.0] );
+        points.push ( [96.798829,32.807955,0.0] );
+        points.push ( [96.799828,32.8071,0.0] );
+        points.push ( [96.799275,32.806619,0.0] );
+        points.push ( [96.80029,32.805047,0.0] );
+        points.push ( [96.801327,32.803497,0.0] );
+        points.push ( [96.802053,32.802399,0.0] );
+        points.push ( [96.802391,32.801826,0.0] );
+        points.push ( [96.801144,32.800724,0.0] );
+        points.push ( [96.80093,32.800448,0.0] );
+        points.push ( [96.800837,32.800163,0.0] );
+        points.push ( [96.800919,32.799744,0.0] );
+        points.push ( [96.801428,32.797646,0.0] );
+        points.push ( [96.802172,32.795088,0.0] );
+        points.push ( [96.80288800000001,32.792926,0.0] );
+        points.push ( [96.803337,32.791663,0.0] );
+        points.push ( [96.804016,32.789312,0.0] );
+        points.push ( [96.80315200000001,32.788596,0.0] );
+        points.push ( [96.802504,32.788087,0.0] );
+        points.push ( [96.800205,32.78612,0.0] );
+        points.push ( [96.798264,32.784398,0.0] );
+        points.push ( [96.798114,32.784347,0.0] );
+        points.push ( [96.797961,32.784379,0.0] );
+        points.push ( [96.797831,32.784431,0.0] );
+        points.push ( [96.797697,32.784518,0.0] );
+        points.push ( [96.797057,32.785051,0.0] );
+        points.push ( [96.79669500000001,32.785577,0.0] );
+        points.push ( [96.796515,32.78566200000001,0.0] );
+        points.push ( [96.796344,32.785738,0.0] );
+        points.push ( [96.79626300000001,32.785849,0.0] );
+        points.push ( [96.796281,32.785965,0.0] );
+        points.push ( [96.796364,32.786035,0.0] );
+        points.push ( [96.796555,32.786139,0.0] );
+        points.push ( [96.797337,32.786868,0.0] );
+        points.push ( [96.798363,32.787655,0.0] );
+        points.push ( [96.798653,32.787863,0.0] );
+        points.push ( [96.79893900000002,32.788047000000006,0.0] );
+        points.push ( [96.799532,32.788266,0.0] );
+        points.push ( [96.799783,32.788431,0.0] );
+        points.push ( [96.800427,32.788918,0.0] );
+        points.push ( [96.800946,32.789342,0.0] );
+        points.push ( [96.80152,32.789875,0.0] );
+        points.push ( [96.803248,32.791487,0.0] );
+        points.push ( [96.803289,32.791631,0.0] );
+        points.push ( [96.802836,32.792908,0.0] );
+        points.push ( [96.802138,32.79508,0.0] );
+        points.push ( [96.801398,32.79764,0.0] );
+        points.push ( [96.800865,32.799732,0.0] );
+        points.push ( [96.800755,32.80024,0.0] );
+        points.push ( [96.800966,32.801715,0.0] );
+        points.push ( [96.80095,32.801808,0.0] );
+        points.push ( [96.800921,32.801866,0.0] );
+
+
+var marker754 = null;
+var map = 0;
+
+function initialize() {
+  var mapOptions = {
+    zoom: 15,
+    center: new google.maps.LatLng(32.797623, -96.799995)
+  };
+
+  map = new google.maps.Map(document.getElementById('map-canvas'),
+      mapOptions);
+
+  var ctaLayer = new google.maps.KmlLayer({
+    url: 'http://track.mata.org/M-Line_Route_NoStops.kml'
+  });
+  ctaLayer.setMap(map);
+
+  car754 = new google.maps.LatLng(32.802623 , -96.799995);
+  pic754 = {
+    url: "754.png",
+    size: new google.maps.Size ( 50 , 50 )
+  };
+  marker754 = new google.maps.Marker({
+    position: car754,
+    draggable: false,
+    title: "754",
+    icon: pic754,
+    map: map,
+    visible: false
+  });
+
+  car369 = new google.maps.LatLng(32.802623 , -96.799995);
+  pic369 = {
+    url: "369.png",
+    size: new google.maps.Size ( 50 , 50 )
+  };
+
+  marker369 = new google.maps.Marker({
+    position: car369,
+    icon: pic369,
+    draggable: false,
+    title: "369",
+    map: map,
+    visible: false
+  });
+
+  car636 = new google.maps.LatLng(32.802623 , -96.799995);
+  pic636 = {
+    url: "636.png",
+    size: new google.maps.Size ( 50 , 50 )
+  };
+
+  marker636 = new google.maps.Marker({
+    position: car636,
+    icon: pic636,
+    draggable: false,
+    title: "636",
+    map: map,
+    visible: false
+  });
+
+  car122 = new google.maps.LatLng(32.802623 , -96.799995);
+  pic122 = {
+    url: "122.png",
+    size: new google.maps.Size ( 50 , 50 )
+  };
+
+  marker122 = new google.maps.Marker({
+    position: car122,
+    icon: pic122,
+    draggable: false,
+    title: "122",
+    map: map,
+    visible: false
+  });
+
+  car186 = new google.maps.LatLng(32.802623 , -96.799995);
+  pic186 = {
+    url: "186.png",
+    size: new google.maps.Size ( 50 , 50 )
+  };
+
+  marker186 = new google.maps.Marker({
+    position: car186,
+    icon: pic186,
+    draggable: false,
+    title: "186",
+    map: map,
+    visible: false
+  });
+
+  car7169 = new google.maps.LatLng(32.802623 , -96.799995);
+  pic7169 = {
+    url: "7169.png",
+    size: new google.maps.Size ( 50 , 50 )
+  };
+
+  marker7169 = new google.maps.Marker({
+    position: car7169,
+    icon: pic7169,
+    draggable: false,
+    title: "7169",
+    map: map,
+    visible: false
+  });
+
+  car4614 = new google.maps.LatLng(32.802623 , -96.799995);
+  pic4614 = {
+    url: "4614.png",
+    size: new google.maps.Size ( 50 , 50 )
+  };
+
+  marker4614 = new google.maps.Marker({
+    position: car4614,
+    icon: pic4614,
+    draggable: false,
+    title: "4614",
+    map: map,
+    visible: false
+  });
+
+  myPosition = new google.maps.LatLng(32.802623 , -96.799995);
+  markerMe = new google.maps.Marker ( {
+    position: myPosition,
+    draggable: false,
+    map: map,
+    title: "You are here",
+    visible: false
+   } );
+
+  console.log ( myPosition );
+  console.log ( markerMe );
+
+  MATAsign = {
+    url: "Monly.png",
+    size: new google.maps.Size ( 15 , 15 )
+  };
+
+  for ( index = 0 ; index < stop.length ; index ++ )
+  {
+    stopCenter = { lat:stop[index][1] , lng:stop[index][0] };
+    var stopMarker = new google.maps.Marker ( {
+      position: stopCenter,
+      map: map,
+      icon: MATAsign
+    } );
+
+//    var stopCircle = new google.maps.Circle ( {
+//      fillColor: '#801537',
+//      fillOpacity: 1,
+//      strokeWeight:2,
+//      map: map,
+//      center: stopCenter,
+//      radius: 15
+//    } );
+  }
+
+  var path = new Array();
+  for ( index = 0 ; index < points.length ; index ++ )
+  {
+    stopCenter = { lat:points[index][1] , lng:points[index][0] * -1 };
+    path.push ( stopCenter );
+  }
+
+  var lineSymbol = {
+    path: google.maps.SymbolPath.FORWARD_CLOSED_ARROW
+  };
+
+  var arrowList = new Array();
+  for ( index = 0 ; index < 100 ; index += 1 )
+  {
+    arrowList.push ( { icon: lineSymbol , offset: index + "%" } );
+  }
+  //console.log ( arrowList );
+
+  var trolleyRoute = new google.maps.Polyline ( {
+    path: path,
+    map: map,
+    strokeColor: '#801537',
+    strokeWeight: 2,
+    icons: arrowList
+  } );
+
+  var $_GET = {};
+
+  document.location.search.replace(/\??(?:([^=]+)=([^&]*)&?)/g, function () {
+    function decode(s) {
+        return decodeURIComponent(s.split("+").join(" "));
+    }
+
+    $_GET[decode(arguments[1])] = decode(arguments[2]);
+  });
+
+  GetState();
+  mapUpdate = window.setInterval ( GetState , 5000 );
+}
+
+
+</script>
+
+<script>
+   var carCount = 0;
+   var carCheck = 0;
+
+   function GetState()
+   {
+      checkTime();
+      carCount = 0;
+      carCheck = 0;
+      obj = new Object();
+      //obj.action = "GETPOSITION";
+      obj.car = 122;
+
+      $.ajax ({
+         url: "/allCars",
+         type: "POST",
+         crossDomain: true,
+         success: function ( data ){
+            carCount = 0;
+            showCars = new Array();
+            cars = JSON.parse ( data );
+            //console.log ( cars );
+            for ( var car in cars )
+            {
+               if ( car == 32768 )
+               {
+                  $ ( "#statusDiv" ).html ( cars [ car ] );
+                  continue;
+               }
+               showCars.push ( car );
+               carCount += 1;
+
+               switch ( car )
+               {
+                  case "122":marker122.setPosition ( new google.maps.LatLng ( cars [ car ] [ 0 ] , cars [ car ] [ 1 ] ) );break;
+                  case "186":marker186.setPosition ( new google.maps.LatLng ( cars [ car ] [ 0 ] , cars [ car ] [ 1 ] ) );break;
+                  case "369":marker369.setPosition ( new google.maps.LatLng ( cars [ car ] [ 0 ] , cars [ car ] [ 1 ] ) );break;
+                  case "636":marker636.setPosition ( new google.maps.LatLng ( cars [ car ] [ 0 ] , cars [ car ] [ 1 ] ) );break;
+                  case "754":marker754.setPosition ( new google.maps.LatLng ( cars [ car ] [ 0 ] , cars [ car ] [ 1 ] ) );break;
+                  case "7169":marker7169.setPosition ( new google.maps.LatLng ( cars [ car ] [ 0 ] , cars [ car ] [ 1 ] ) );break;
+                  case "4614":marker4614.setPosition ( new google.maps.LatLng ( cars [ car ] [ 0 ] , cars [ car ] [ 1 ] ) );break;
+
+               }
+            
+               if ( showCars.indexOf ( "122" ) != -1 ) marker122.setVisible ( true );
+               else marker122.setVisible ( false );
+               if ( showCars.indexOf ( "186" ) != -1 ) marker186.setVisible ( true );
+               else marker186.setVisible ( false );
+               if ( showCars.indexOf ( "369" ) != -1 ) marker369.setVisible ( true );
+               else marker369.setVisible ( false );
+               if ( showCars.indexOf ( "636" ) != -1 ) marker636.setVisible ( true );
+               else marker636.setVisible ( false );
+               if ( showCars.indexOf ( "754" ) != -1 ) marker754.setVisible ( true );
+               else marker754.setVisible ( false );
+               if ( showCars.indexOf ( "7169" ) != -1 ) marker7169.setVisible ( true );
+               else marker7169.setVisible ( false );
+               if ( showCars.indexOf ( "4614" ) != -1 ) marker4614.setVisible ( true );
+               else marker4614.setVisible ( false );
+
+               carsInService()
+            }
+         }
+      } );
+   }
+
+   function carsInService()
+   {
+         if ( mapOn == true ) $ ( "#carCount" ).html ( carCount );
+         else $ ( "#carCount" ).html ( "0" );
+   }
+
+function getLocation() {
+  console.log ( myPosition );
+
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(showPosition);
+  } else {
+    alert ( "GPS is not supported by this browser." );
+  }
+}
+
+function showPosition(position) {
+  myPosition = new google.maps.LatLng(position.coords.latitude , position.coords.longitude);
+  markerMe.setPosition ( myPosition );
+  markerMe.setVisible ( true );
+  window.map.panTo ( myPosition );
+
+  console.log ( markerMe );
+}
+
+</script>
+
+  </head>
+  <body onload='loadScript();carCount = 0;'>
+    <!--<div id="map-canvas" style="position:absolute; top: 12%; width: 99%; height: 87%; z-index:1"></div>-->
+    <!--<div style="position:absolute; top: 12%; width: 99%; height: 87%;background-color:black;z-index:-1"></div>-->
+    <div id="hours" style="position:absolute; top: 12%; width: 99%; max-height: 87%;z-index:2;text-align:center;color:red;font-family:Arial;font-size:14pt;padding-top:25%;display:none;">
+<div style='font-weight:bold;'>Service Hours</div>
+<div>Sunday: 10AM - 10PM</div>
+<div>Monday: 7AM - 10PM</div>
+<div>Tuesday: 7AM - 10PM</div>
+<div>Wednesday: 7AM - 10PM</div>
+<div>Thursday: 7AM - 10PM</div>
+<div>Friday: 7AM - midnight</div>
+<div>Saturday: 10AM - midnight</div>
+
+    </div>
+
+    <div style='position:absolute;left:0px;top:0px;'>
+       <table>
+          <tr>
+             <td style='font-family:Arial;font-size:8pt;text-align:center;border:1px black solid;margin:5px;padding:3px;'>Cars in<br>service
+                <div id='carCount' style='position:relative;font-family:Arial;font-size:20pt;font-weight:bold;'>#</div>
+             </td>
+             <td style='font-family:Arial;'>
+                <span seamless='seamless' frameBorder='0' id='statusDiv'></span>
+             </td>
+          </tr>
+       </table>
+       <div style='position:fixed;top:2px;right:2px;background-color:green;color:white;font-size:16pt;'>
+          <input type='button' style='background-color:green;color:white;font-size:16pt;' value='Where am I?' onclick='getLocation()'>
+       </div>
+    </div>
+    <div style="position:absolute; top: 75px; left:0px;right:0px;bottom:0px;background-color:black;z-index:-1"></div>
+    <div id="map-canvas" style="position:absolute;top:75px;left:0px;right:0px;bottom:0px; z-index:-1"></div>
+
+    <div id='closed' style='position:absolute;top:0px;left:0px;height:75px;width:100%;font-family:Arial;font-size:10pt;background-color:black;display:none;'>&nbsp;</div>
+    <div id='noservice' style='position:fixed;top:0px;left:0px;width:100%;height:75px;color:red;font-family:Arial;font-size:16pt;font-weight:bold;padding-top:2%;text-align:center;display:none;'>
+       M-Line service has ended for the night
+    </div>
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-78079960-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+  </body>
+</html>
