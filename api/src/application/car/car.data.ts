@@ -11,7 +11,7 @@ export const getCar = (cars: () => Knex.QueryBuilder<any, any>) => async (id: nu
     return (await cars().select(allKeysOfCar).select<any, Car>().where({ID: id}) as Car[])[0]
 }
 export const getAll = (cars: () => Knex.QueryBuilder<any, Car[]>) => async () => {
-    return (await cars().select(allKeysOfCar).orderBy('car'));
+    return (await cars().select(allKeysOfCar).orderBy('car')) as Car[];
 }
 
 export async function create (data: DataClient): Promise<Data> {

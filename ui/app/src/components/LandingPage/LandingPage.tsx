@@ -26,7 +26,7 @@ export const LandingPage = () => {
     
     return (
             <>
-                <BrowserRouter>
+                <BrowserRouter basename="/dashboard">
                     <NavBar />
                     <Box style={{margin:'10px'}}>   
                         <Routes>

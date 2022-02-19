@@ -11,6 +11,8 @@ import carStateApplication from './application/car-state'
 import utils from "./util"
 import jwtAuthenticator from "./middleware/jwt.authenticator";
 
+import legacyAllCars from "./application/legacy-all-cars";
+
 import { errorHandler, errorNotFoundHandler } from "./middlewares/errorHandler";
 
 import dataProviders from "./data-providers";
@@ -21,6 +23,7 @@ import { RastracEventEmitter } from "./data-providers/rastrac.provider";
 import mySqlProvider from "./data-providers/my-sql.provider";
 import passport from "passport";
 import cors from "cors";
+import carHandler from "./application/car/car.handler";
 // Create Express server
 export const app = express();
 
@@ -53,21 +56,17 @@ async function RegisterControllers() {
 
     app.use('/cars', router);
   }
-  const addAlertRoutes = async () => {
-    const data = await alertApplication.data.create(dataProvider);
-    const handler = await alertApplication.handler.create(data, util);
-    const router = await alertApplication.controller.create(handler, util, authMiddleware);
+  const alertData = await alertApplication.data.create(dataProvider);
+  const alertHandler = await alertApplication.handler.create(alertData, util);
+  const alertRouter = await alertApplication.controller.create(alertHandler, util, authMiddleware);
 
-    app.use('/alerts', router);
-  }
+  app.use('/alerts', alertRouter);
 
-  const addPositionRoutes = async() => {
-    const data = await positionApplication.data.create(dataProvider);
-    const handler = await positionApplication.handler.create(data, rastracEventEmitter);
-    const router = await positionApplication.controller.create(handler, util, authMiddleware);
+  const positionData = await positionApplication.data.create(dataProvider);
+  const positionHandler = await positionApplication.handler.create(positionData, rastracEventEmitter);
+  const positionRouter = await positionApplication.controller.create(positionHandler, util, authMiddleware);
 
-    app.use('/positions', router);
-  }
+  app.use('/positions', positionRouter);
 
   const addLoginRoutes = async () => {
     const data = await loginApplication.data.create(dataProvider);
@@ -93,10 +92,13 @@ async function RegisterControllers() {
     app.use('/car-states', controller);
   }
 
+  const addLegacyRoutes =  async () => {
+    const controller = await legacyAllCars.controller.create(positionHandler, alertHandler, rastracEventEmitter);
+    app.use('allCars', controller);
+  }
+
   await Promise.all([
     addCarRoutes(), 
-    addAlertRoutes(),
-    addPositionRoutes(),
     addLoginRoutes(),
     addUserRoutes(),
     addCarStateRoutes()

@@ -210,25 +210,6 @@ status: {}
 
 ---
 
-apiVersion: v1
-kind: Service
-metadata:
-  labels:
-    app: phpmyadmin
-  name: phpmyadmin
-spec:
-  type: NodePort
-  ports:
-    - name: "82"
-      port: 82
-      targetPort: 82
-  selector:
-    app: phpmyadmin
-status:
-  loadBalancer: {}
-
-
----
 
 apiVersion: v1
 kind: PersistentVolumeClaim
