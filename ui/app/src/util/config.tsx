@@ -4,5 +4,5 @@ export type Config = {
 }
 
 export default {
-    apiBaseUrl: 'http://localhost:3001'
+    apiBaseUrl: '/api'
 } as Config
