@@ -49,13 +49,12 @@ async function RegisterControllers() {
   const mysqlInstance = await mySqlProvider.create();
   const dataProvider = await dataProviders.create(rastracEventEmitter, mysqlInstance);
   
-  const addCarRoutes = async () => {
-    const data = await carApplication.data.create(dataProvider);
-    const handler = await carApplication.handler.create(data);
-    const router = carApplication.controller.create(handler, util);
+  const carData = await carApplication.data.create(dataProvider);
+  const carHandler = await carApplication.handler.create(carData);
+  const carRouter = carApplication.controller.create(carHandler, util);
 
-    app.use('/cars', router);
-  }
+  app.use('/cars', carRouter);
+
   const alertData = await alertApplication.data.create(dataProvider);
   const alertHandler = await alertApplication.handler.create(alertData, util);
   const alertRouter = await alertApplication.controller.create(alertHandler, util, authMiddleware);
@@ -93,15 +92,15 @@ async function RegisterControllers() {
   }
 
   const addLegacyRoutes =  async () => {
-    const controller = await legacyAllCars.controller.create(positionHandler, alertHandler, rastracEventEmitter);
-    app.use('allCars', controller);
+    const controller = await legacyAllCars.controller.create(positionHandler, alertHandler, rastracEventEmitter, carHandler);
+    app.use('/allCars', controller);
   }
 
   await Promise.all([
-    addCarRoutes(), 
     addLoginRoutes(),
     addUserRoutes(),
-    addCarStateRoutes()
+    addCarStateRoutes(),
+    addLegacyRoutes()
   ]);
 
   app.get('/heart-beat', (req, res)=>{res.end("hello world")});

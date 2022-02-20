@@ -517,13 +517,13 @@ function initialize() {
       obj.car = 122;
 
       $.ajax ({
-         url: "/allCars",
-         type: "POST",
+         url: "api/allCars",
+         type: "GET",
          crossDomain: true,
          success: function ( data ){
             carCount = 0;
             showCars = new Array();
-            cars = JSON.parse ( data );
+            cars = data;
             //console.log ( cars );
             for ( var car in cars )
             {
