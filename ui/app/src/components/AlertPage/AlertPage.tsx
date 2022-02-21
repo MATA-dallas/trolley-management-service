@@ -22,15 +22,15 @@ const NewAlert = () => {
             <Typography variant="h4">
                 Add Alert
             </Typography>
-            <Typography variant="body1">
-                Enter alert Message:
-            </Typography>
             <TextField 
                 value={message} 
                 onChange={e=>setMessage(e.currentTarget.value)} 
                 onKeyPress={e=>{if(e.key == 'Enter') addAlert()} }
                 id="outlined-basic" 
                 label="Message" 
+                multiline
+                rows={4}
+                fullWidth
                 variant="outlined" />
             <div>
                 <Button onClick={() => addAlert()} variant="contained">
