@@ -8,6 +8,7 @@ COPY knexfile.js .
 COPY run-app.sh .
 RUN npm install
 COPY ./src ./src
+COPY ./migrations ./migrations
 RUN npm run build
 
 EXPOSE 3000

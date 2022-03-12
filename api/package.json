@@ -12,7 +12,8 @@
         "build-ts": "tsc",
         "watch-ts": "tsc -w",
         "typecheck": "tsc --noEmit",
-        "migrate:up": "knex --knexfile knexfile.js migrate:latest --verbose"
+        "migrate:up": "knex --knexfile knexfile.js migrate:latest --verbose",
+        "migrate:make": "knex migrate:make"
     },
     "author": "",
     "license": "ISC",

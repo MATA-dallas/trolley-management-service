@@ -50,7 +50,7 @@ export namespace Knex {
     },
     migrations: {
       tableName: 'KnexMigrations',
-      directory: './dist/migrations'
+      directory: 'migrations'
     },
   }
 }
