@@ -7,7 +7,8 @@ import alertApplication from './application/alert';
 import positionApplication from './application/position';
 import loginApplication from './application/login';
 import userApplication from './application/user';
-import carStateApplication from './application/car-state'
+import carStateApplication from './application/car-state';
+import advertisementApplication from './application/advertisement';
 import utils from "./util"
 import jwtAuthenticator from "./middleware/jwt.authenticator";
 
@@ -96,11 +97,18 @@ async function RegisterControllers() {
     app.use('/allCars', controller);
   }
 
+  const addAdRoutes = async() => {
+    const handler = await advertisementApplication.handler.create(dataProvider);
+    const controller = await advertisementApplication.controller.create(handler, authMiddleware);
+    app.use('/ads', controller);
+  }
+
   await Promise.all([
     addLoginRoutes(),
     addUserRoutes(),
     addCarStateRoutes(),
-    addLegacyRoutes()
+    addLegacyRoutes(),
+    addAdRoutes()
   ]);
 
   app.get('/heart-beat', (req, res)=>{res.end("hello world")});
