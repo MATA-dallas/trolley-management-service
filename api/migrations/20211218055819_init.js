@@ -1,9 +1,6 @@
-import {
-    Knex
-} from "knex";
-
-
-export async function up(knex: Knex): Promise < void > {
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.down = exports.up = void 0;
+async function up(knex) {
     await knex.raw(`
     CREATE TABLE IF NOT EXISTS \`allowedNumbers\` (
         \`ID\` int(11) NOT NULL AUTO_INCREMENT,
@@ -20,7 +17,6 @@ export async function up(knex: Knex): Promise < void > {
         PRIMARY KEY (\`ID\`)
         );
     `);
-
     await knex.raw(`CREATE TABLE IF NOT EXISTS \`highlights\` (
         \`ID\` int(11) NOT NULL AUTO_INCREMENT,
         \`Latitude\` float NOT NULL,
@@ -35,7 +31,6 @@ export async function up(knex: Knex): Promise < void > {
         \`expiration\` datetime NOT NULL,
         PRIMARY KEY (\`ID\`)
         );`);
-
     await knex.raw(`CREATE TABLE IF NOT EXISTS \`inboundTrips\` (
         \`ID\` int(11) NOT NULL AUTO_INCREMENT,
         \`Car\` int(11) NOT NULL,
@@ -43,7 +38,6 @@ export async function up(knex: Knex): Promise < void > {
         \`endTime\` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
         PRIMARY KEY (\`ID\`)
         );`);
-
     await knex.raw(`CREATE TABLE IF NOT EXISTS \`mapTimes\` (
         \`ID\` int(11) NOT NULL AUTO_INCREMENT,
         \`loadTime\` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
@@ -51,7 +45,6 @@ export async function up(knex: Knex): Promise < void > {
         \`notes\` varchar(45) DEFAULT NULL,
         PRIMARY KEY (\`ID\`)
         );`);
-
     await knex.raw(`CREATE TABLE IF NOT EXISTS \`outboundTrips\` (
         \`ID\` int(11) NOT NULL AUTO_INCREMENT,
         \`Car\` int(11) NOT NULL,
@@ -59,7 +52,6 @@ export async function up(knex: Knex): Promise < void > {
         \`endTime\` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
         PRIMARY KEY (\`ID\`)
         );`);
-
     await knex.raw(`CREATE TABLE IF NOT EXISTS \`positions\` (
         \`car\` int(11) NOT NULL,
         \`latitude\` float NOT NULL,
@@ -69,7 +61,6 @@ export async function up(knex: Knex): Promise < void > {
         \`manualStatus\` varchar(16) NOT NULL,
         PRIMARY KEY (\`car\`)
         );`);
-
     await knex.raw(`CREATE TABLE IF NOT EXISTS \`riderAlerts\` (
         \`ID\` int(11) NOT NULL AUTO_INCREMENT,
         \`UpdateID\` int(11) NOT NULL,
@@ -81,7 +72,6 @@ export async function up(knex: Knex): Promise < void > {
         \`Active\` tinyint(1) NOT NULL DEFAULT '1',
         PRIMARY KEY (\`ID\`)
         );`);
-
     await knex.raw(`CREATE TABLE IF NOT EXISTS \`schedule\` (
         \`ID\` int(11) NOT NULL AUTO_INCREMENT,
         \`Day\` varchar(16) NOT NULL,
@@ -89,7 +79,6 @@ export async function up(knex: Knex): Promise < void > {
         \`duration\` int(11) NOT NULL,
         PRIMARY KEY (\`ID\`)
         );`);
-
     await knex.raw(`CREATE TABLE IF NOT EXISTS \`stops\` (
         \`ID\` int(11) NOT NULL AUTO_INCREMENT,
         \`Name\` varchar(64) NOT NULL,
@@ -97,7 +86,6 @@ export async function up(knex: Knex): Promise < void > {
         \`Latitude\` float NOT NULL,
         PRIMARY KEY (\`ID\`)
         );`);
-
     await knex.raw(`CREATE TABLE IF NOT EXISTS \`texts\` (
         \`ID\` int(11) NOT NULL AUTO_INCREMENT,
         \`TwilioSID\` varchar(34) NOT NULL,
@@ -107,8 +95,6 @@ export async function up(knex: Knex): Promise < void > {
         \`Media\` int(11) NOT NULL,
         PRIMARY KEY (\`ID\`)
         );`);
-
-
     await knex.raw(`CREATE TABLE IF NOT EXISTS \`timing\` (
         \`ID\` int(11) NOT NULL AUTO_INCREMENT,
         \`car\` int(11) DEFAULT NULL,
@@ -117,7 +103,6 @@ export async function up(knex: Knex): Promise < void > {
         \`departure\` timestamp NULL DEFAULT NULL,
         PRIMARY KEY (\`ID\`)
         );`);
-
     await knex.raw(`CREATE TABLE IF NOT EXISTS \`users\` (
         \`ID\` int(11) NOT NULL AUTO_INCREMENT,
         \`user\` varchar(32) NOT NULL,
@@ -128,9 +113,8 @@ export async function up(knex: Knex): Promise < void > {
         PRIMARY KEY (\`ID\`)
         );`);
 }
-
-
-export async function down(knex: Knex): Promise<void> {
+exports.up = up;
+async function down(knex) {
     await knex.raw(`
         DROP TABLE \`allowedNumbers\` 
         DROP TABLE \`cars\` 
@@ -147,3 +131,4 @@ export async function down(knex: Knex): Promise<void> {
         DROP TABLE \`users\` 
     `);
 }
+exports.down = down;
