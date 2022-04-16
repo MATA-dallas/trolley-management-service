@@ -76,6 +76,12 @@ const list = (toggleDrawer: (isOpen: boolean) => any) => (
                 </ListItemIcon>
                 <ListItemText primary={"alerts"} />
             </ListItem>
+            <ListItem button component={Link} to="/ads">
+                <ListItemIcon>
+                    <AddAlertIcon />
+                </ListItemIcon>
+                <ListItemText primary={"ads"} />
+            </ListItem>
         </List>
     </Box>
 );
