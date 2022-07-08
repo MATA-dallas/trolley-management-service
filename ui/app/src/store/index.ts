@@ -4,16 +4,19 @@ import user, { UserService } from "../services/user.service";
 import carData, { CarDataService } from "../services/car-data.service";
 import alertData, { AlertDataService } from "../services/alert.service";
 import { Config, ConfigValues as configValues } from "../util/config";
+import adData, { AdService } from '../services/ad.service';
 
 export const loginService = login.create(configValues);
 export const userService = user.create(loginService, configValues);
 export const carDataService = carData.create(configValues, loginService);
 export const alertDataService = alertData.create(configValues, loginService);
+export const adDataService = adData.create(configValues, loginService);
 
 export const loginServiceContext = createContext<LoginService>(loginService);
 export const userServiceContext = createContext<UserService>(userService);
 export const carDataServiceContext = createContext<CarDataService>(carDataService);
 export const alertDataServiceContext = createContext<AlertDataService>(alertDataService);
+export const adDataServiceContext = createContext<AdService>(adDataService);
 export const configContext = createContext<Config>(configValues);
 
 export const useLoginServiceContext = () => {
@@ -34,4 +37,8 @@ export const useAlertServiceContext = () => {
 
 export const useConfigContext = () => {
     return useContext(configContext);
+}
+
+export const useAdContext = () => {
+    return useContext(adDataServiceContext);
 }

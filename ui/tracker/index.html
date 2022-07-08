@@ -10,8 +10,9 @@
     <link rel="apple-touch-icon" sizes="72x72" href="images/apple-icon-72x72.png" />
     <link rel="apple-touch-icon" sizes="114x114" href="images/apple-icon-114x114.png" />
     <link rel="apple-touch-icon" sizes="144x144" href="images/apple-icon-144x144.png" />
-    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCuewi59iOI1A4dRc3KfjS24czLtsI9__k&callback=initialize"
-  type="text/javascript"></script>
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
 
 <script>
 timeID = "";
@@ -593,10 +594,15 @@ function showPosition(position) {
   console.log ( markerMe );
 }
 
+$(document).ready(() => {
+  loadScript();
+  carCount = 0;
+})
+
 </script>
 
   </head>
-  <body onload='loadScript();carCount = 0;'>
+  <body>
     <!--<div id="map-canvas" style="position:absolute; top: 12%; width: 99%; height: 87%; z-index:1"></div>-->
     <!--<div style="position:absolute; top: 12%; width: 99%; height: 87%;background-color:black;z-index:-1"></div>-->
     <div id="hours" style="position:absolute; top: 12%; width: 99%; max-height: 87%;z-index:2;text-align:center;color:red;font-family:Arial;font-size:14pt;padding-top:25%;display:none;">
@@ -633,10 +639,6 @@ function showPosition(position) {
     <div id='noservice' style='position:fixed;top:0px;left:0px;width:100%;height:75px;color:red;font-family:Arial;font-size:16pt;font-weight:bold;padding-top:2%;text-align:center;display:none;'>
        M-Line service has ended for the night
     </div>
-
-    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-    <!-- Include all compiled plugins (below), or include individual files as needed -->
 <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -647,5 +649,6 @@ function showPosition(position) {
   ga('send', 'pageview');
 
 </script>
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCuewi59iOI1A4dRc3KfjS24czLtsI9__k&callback=initialize"type="text/javascript"></script>
   </body>
 </html>

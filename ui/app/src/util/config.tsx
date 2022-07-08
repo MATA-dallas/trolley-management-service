@@ -1,8 +1,12 @@
 
 export type Config = {
-    apiBaseUrl: string
+    apiBaseUrl: string,
+    uiBasePrefix: string
 }
 
-export default {
-    apiBaseUrl: '/api'
+const config =  {
+    apiBaseUrl: 'http://localhost:3001',
+    uiBasePrefix:''
 } as Config
+
+export {config as ConfigValues};
